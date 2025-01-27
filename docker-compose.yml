@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 555666
+      POSTGRES_MULTIPLE_DATABASES: postdb,userdb
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tomcat-user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+
+  tomcat-post-service:
+    build:
+      context: ./post-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
