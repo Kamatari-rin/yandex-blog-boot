@@ -1,11 +1,10 @@
-package org.example.model;
+package org.example.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.example.model.Tag;
 
-import java.time.Instant;
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -13,10 +12,10 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class Post {
+public class PostUpdateDTO {
 
-    private Long id;
+    private Long postId;
+    private Long userId;
 
     @NotNull(message = "Title cannot be null")
     @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
@@ -27,14 +26,5 @@ public class Post {
     private String content;
 
     private String imageUrl;
-
-    private String authorName;
-
-    @Builder.Default
-    private Set<Tag> tags = new HashSet<>();
-
-    private Long userId;
-
-    private Instant createdAt;
-    private Instant updatedAt;
+    private Set<Tag> tags;
 }
