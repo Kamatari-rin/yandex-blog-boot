@@ -1,10 +1,12 @@
 package org.example.config;
 
 
-import org.example.controller.UserTestController;
+import org.example.controller.UserController;
 import org.springframework.context.annotation.*;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
@@ -22,8 +24,21 @@ public class UserServiceAppConfig {
     }
 
     @Bean
-    public UserTestController userTestController() {
-        return new UserTestController();
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*");
+            }
+        };
+    }
+
+    @Bean
+    public UserController userController() {
+        return new UserController();
     }
 
     @Bean

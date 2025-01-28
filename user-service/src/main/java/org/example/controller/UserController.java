@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
-public class UserTestController {
+public class UserController {
     @GetMapping("/test")
     public ResponseEntity<String> userTestEndpoint() {
-        return ResponseEntity.ok("It works!");
+        return ResponseEntity.ok("UserController works!");
     }
 }

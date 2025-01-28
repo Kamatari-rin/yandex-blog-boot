@@ -28,10 +28,8 @@ RUN set -eux; \
         exit 1; \
     fi
 
-# Заменяем порт с 8080 на 8081
 RUN sed -i 's/8080/8081/' $CATALINA_HOME/conf/server.xml
 
-# Копируем ваш WAR-файл
 COPY target/user-service-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8081

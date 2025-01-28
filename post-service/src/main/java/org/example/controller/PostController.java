@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/post")
-public class PostTestController {
+public class PostController {
     @GetMapping("/test")
     public ResponseEntity<String> postTestEndpoint() {
-        return ResponseEntity.ok("It works!");
+        return ResponseEntity.ok("PostController works!");
     }
 }

@@ -36,6 +36,18 @@ services:
     networks:
       - app-network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+    depends_on:
+      - tomcat-user-service
+      - tomcat-post-service
+
 networks:
   app-network:
     driver: bridge
