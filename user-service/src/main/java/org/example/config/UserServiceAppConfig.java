@@ -12,16 +12,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = "org.example")
+@Import({
+        DatabaseConfig.class,
+        JacksonConfig.class,
+        UserAndLikeMapperConfig.class
+})
 public class UserServiceAppConfig {
-
-    @Import(DatabaseConfig.class)
-    public static class DatabaseConfigImport {
-    }
-
-    @Import(JacksonConfig.class)
-    public static class JacksonConfigImport {
-
-    }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {

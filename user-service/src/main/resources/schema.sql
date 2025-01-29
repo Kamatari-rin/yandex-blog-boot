@@ -27,7 +27,10 @@ CREATE TABLE IF NOT EXISTS user_service.likes (
                                                   FOREIGN KEY (target_type_id) REFERENCES user_service.target_types(id)
 );
 
--- Добавляем типы целей (если они еще не существуют)
 INSERT INTO user_service.target_types (type_name)
 VALUES ('POST'), ('COMMENT')
 ON CONFLICT (type_name) DO NOTHING;
+
+INSERT INTO user_service.users (username, email, password, created_at, updated_at)
+VALUES ('admin', 'admin@email.com', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+ON CONFLICT (email) DO NOTHING;
