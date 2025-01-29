@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
-public class PostAndCommentMapperConfig {
+public class MapperConfig {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PostAndCommentMapperConfig(JdbcTemplate jdbcTemplate) {
+    public MapperConfig(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
