@@ -6,7 +6,7 @@ function TestButtons() {
 
   const handlePostTest = async () => {
     try {
-      const response = await api.get("/post/test"); // Базовый URL из api.js автоматически добавится
+      const response = await api.get("/api/post/test"); // Базовый URL из api.js автоматически добавится
       setMessage(response.data);
     } catch (error) {
       setMessage("Ошибка при обращении к PostController");

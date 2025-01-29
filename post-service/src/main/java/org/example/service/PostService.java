@@ -16,6 +16,4 @@ public interface PostService {
     PostDTO updatePost(PostUpdateDTO postUpdateDTO);
 
     void deletePost(Long postId);
-
-    List<PostDTO> getPostsByTag(String tagName, int limit, int offset);
 }

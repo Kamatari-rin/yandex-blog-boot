@@ -8,6 +8,11 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 import org.example.controller.PostController;
+import org.example.mapper.PostMapper;
+import org.example.repository.PostRepository;
+import org.example.service.PostService;
+import org.example.service.UserServiceClient;
+import org.example.service.impl.PostServiceImpl;
 import org.example.service.impl.UserServiceClientImpl;
 import org.springframework.context.annotation.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -62,8 +67,13 @@ public class PostServiceAppConfig {
     }
 
     @Bean
-    public PostController postController() {
-        return new PostController();
+    public PostServiceImpl postService(PostRepository postRepository, UserServiceClient userServiceClient, PostMapper postMapper) {
+        return new PostServiceImpl(postRepository, userServiceClient, postMapper);
+    }
+
+    @Bean
+    public PostController postController(PostService postService) {
+        return new PostController(postService);
     }
 
     @Bean

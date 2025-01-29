@@ -4,18 +4,17 @@ import org.example.dto.PostCreateDTO;
 import org.example.dto.PostDTO;
 import org.example.dto.PostUpdateDTO;
 import org.example.dto.UserDTO;
+import org.example.enums.LikeTargetType;
 import org.example.model.Post;
 import org.example.model.Tag;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.Named;
+import org.example.repository.PostRepository;
+import org.example.service.UserServiceClient;
+import org.mapstruct.*;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
 public interface PostMapper {
 
     @Mapping(target = "id", source = "postId")
@@ -38,14 +37,14 @@ public interface PostMapper {
             @Mapping(source = "post.title", target = "title"),
             @Mapping(source = "post.imageUrl", target = "imageUrl"),
             @Mapping(source = "post.content", target = "content"),
-            @Mapping(source = "post.authorName", target = "authorName"),
+            @Mapping(target = "authorName", expression = "java(getAuthorName(post, userServiceClient))"),
             @Mapping(source = "post.createdAt", target = "createdAt"),
             @Mapping(source = "post.updatedAt", target = "updatedAt"),
             @Mapping(target = "tags", source = "post.tags", qualifiedByName = "tagToStringSet"),
-            @Mapping(target = "likesCount", expression = "java(getLikesCount(userDTO, post))"),
-            @Mapping(target = "commentsCount", expression = "java(getCommentsCount(post))")
+            @Mapping(target = "likesCount", expression = "java(getLikesCount(post, userServiceClient))"),
+            @Mapping(target = "commentsCount", expression = "java(getCommentsCount(post, postRepository))")
     })
-    PostDTO toPostDTO(Post post, UserDTO userDTO);
+    PostDTO toPostDTO(Post post, @Context UserServiceClient userServiceClient, @Context PostRepository postRepository);
 
     @Named("tagToStringSet")
     default Set<String> tagToStringSet(Set<Tag> tags) {
@@ -57,12 +56,16 @@ public interface PostMapper {
                 .collect(Collectors.toSet());
     }
 
-    default int getLikesCount(UserDTO userDTO, Post post) {
-        return 0;
+    default int getLikesCount(Post post, @Context UserServiceClient userServiceClient) {
+        return userServiceClient.fetchLikesCountByTarget(post.getId(), LikeTargetType.POST);
     }
 
-    default int getCommentsCount(Post post) {
-        return 0;
+    default int getCommentsCount(Post post, @Context PostRepository postRepository) {
+        return postRepository.countCommentsByPostId(post.getId());
+    }
+
+    default String getAuthorName(Post post, @Context UserServiceClient userServiceClient) {
+        return userServiceClient.fetchUserById(post.getUserId()).getUsername();
     }
 
     default Set<Tag> mapTags(Set<String> tagNames) {
@@ -74,4 +77,3 @@ public interface PostMapper {
                 .collect(Collectors.toSet());
     }
 }
-
