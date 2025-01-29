@@ -65,6 +65,13 @@ public class PostRepositoryImpl extends AbstractRepositoryImpl<Post> implements 
         return updatedPost;
     }
 
+    @Override
+    public int countCommentsByPostId(Long postId) {
+        String sql = "SELECT COUNT(*) FROM comments WHERE post_id = ?";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, postId);
+    }
+
     private void deleteTagsForPost(Long postId) {
         String sql = "DELETE FROM post_tags WHERE post_id = ?";
         jdbcTemplate.update(sql, postId);

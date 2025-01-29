@@ -7,5 +7,7 @@ public interface PostRepository extends AbstractRepository<Post> {
     Post save(Post post);
 
     Post update(Post post);
+
+    int countCommentsByPostId(Long postId);
 }
 
