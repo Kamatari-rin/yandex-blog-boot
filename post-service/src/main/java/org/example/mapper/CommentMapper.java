@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+@Mapper(componentModel = "spring")
 public interface CommentMapper {
 
     @Mapping(target = "id", ignore = true)
@@ -15,7 +16,6 @@ public interface CommentMapper {
     @Mapping(target = "updatedAt", ignore = true)
     Comment toEntity(CommentCreateDTO dto);
 
-    @Mapping(target = "id", source = "id")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Comment toEntity(CommentUpdateDTO dto);

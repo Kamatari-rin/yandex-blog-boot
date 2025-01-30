@@ -1,7 +1,5 @@
 package org.example.config;
 
-
-import org.example.controller.UserController;
 import org.springframework.context.annotation.*;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -30,11 +28,6 @@ public class UserServiceAppConfig {
                         .allowedHeaders("*");
             }
         };
-    }
-
-    @Bean
-    public UserController userController() {
-        return new UserController();
     }
 
     @Bean

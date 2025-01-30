@@ -1,16 +1,11 @@
 package org.example.config;
 
-import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
-import org.example.controller.PostController;
 import org.example.mapper.PostMapper;
 import org.example.repository.PostRepository;
-import org.example.service.PostService;
 import org.example.service.UserServiceClient;
 import org.example.service.impl.PostServiceImpl;
 import org.example.service.impl.UserServiceClientImpl;
@@ -69,11 +64,6 @@ public class PostServiceAppConfig {
     @Bean
     public PostServiceImpl postService(PostRepository postRepository, UserServiceClient userServiceClient, PostMapper postMapper) {
         return new PostServiceImpl(postRepository, userServiceClient, postMapper);
-    }
-
-    @Bean
-    public PostController postController(PostService postService) {
-        return new PostController(postService);
     }
 
     @Bean

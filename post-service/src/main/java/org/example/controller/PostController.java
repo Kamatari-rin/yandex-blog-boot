@@ -5,7 +5,6 @@ import org.example.dto.PostCreateDTO;
 import org.example.dto.PostDTO;
 import org.example.dto.PostUpdateDTO;
 import org.example.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +32,16 @@ public class PostController {
         return ResponseEntity.ok(postDTO);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Ошибка: " + e.getMessage());
+    }
+
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts(
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "0") int offset) {
+            @RequestParam(required = false, defaultValue = "10") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset) {
         List<PostDTO> posts = postService.getAllPosts(limit, offset);
         return ResponseEntity.ok(posts);
     }

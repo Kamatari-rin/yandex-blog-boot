@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import api from "../config/api";
+import api from "../api";
 
 function TestButtons() {
   const [message, setMessage] = useState("Нажмите на кнопку для проверки API");
 
   const handlePostTest = async () => {
     try {
-      const response = await api.get("/api/post/test"); // Базовый URL из api.js автоматически добавится
+      const response = await api.get("/api/post/test");
       setMessage(response.data);
     } catch (error) {
       setMessage("Ошибка при обращении к PostController");

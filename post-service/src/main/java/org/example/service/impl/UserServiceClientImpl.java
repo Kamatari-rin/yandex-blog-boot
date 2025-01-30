@@ -21,20 +21,19 @@ public class UserServiceClientImpl implements UserServiceClient {
 
     @Override
     public UserDTO fetchUserById(Long userId) {
-        String userUrl = UriComponentsBuilder.fromHttpUrl(userServiceUrl)
-                .pathSegment("api", "users", "{id}")
-                .buildAndExpand(userId)
-                .toUriString();
-
-        try {
-            ResponseEntity<UserDTO> responseEntity = restTemplate.getForEntity(userUrl, UserDTO.class);
-            if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
-                throw new RuntimeException("Failed to fetch user information for user ID: " + userId);
-            }
-            return responseEntity.getBody();
-        } catch (Exception e) {
-            throw new RuntimeException("Error occurred while fetching user data from user-service", e);
+        if (userServiceUrl == null || userServiceUrl.isBlank()) {
+            throw new RuntimeException("user.service.url is not set in application.properties");
         }
+
+        String userUrl = String.format("%s/api/users/%d", userServiceUrl, userId);
+
+        ResponseEntity<UserDTO> responseEntity = restTemplate.getForEntity(userUrl, UserDTO.class);
+
+        if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
+            throw new RuntimeException("Failed to fetch user information for user ID: " + userId);
+        }
+
+        return responseEntity.getBody();
     }
 
     @Override

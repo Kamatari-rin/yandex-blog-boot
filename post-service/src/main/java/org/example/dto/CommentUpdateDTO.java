@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CommentUpdateDTO {
 
+    private Long id;
     @NotNull
     @Size(min = 5, message = "Content must be at least 5 characters long")
     private String content;
