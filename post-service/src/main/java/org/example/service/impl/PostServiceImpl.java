@@ -55,15 +55,27 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(postUpdateDTO.getPostId())
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postUpdateDTO.getPostId()));
 
-        postMapper.toEntity(postUpdateDTO);
-        postRepository.update(post);
+        Post updatedPost = postMapper.toEntity(postUpdateDTO);
+        updatedPost.setId(post.getId());
+        updatedPost.setUserId(post.getUserId());
 
-        return postMapper.toPostDTO(post, userServiceClient, postRepository);
+        postRepository.update(updatedPost);
+
+        return postMapper.toPostDTO(updatedPost, userServiceClient, postRepository);
     }
 
     @Override
     @Transactional
     public void deletePost(Long postId) {
         postRepository.delete(postId);
+    }
+
+    @Override
+    public List<PostDTO> getPostsByTag(String tagName) {
+        List<Post> posts = postRepository.findPostsByTag(tagName);
+
+        return posts.stream()
+                .map(post -> postMapper.toPostDTO(post, userServiceClient, postRepository))
+                .collect(Collectors.toList());
     }
 }

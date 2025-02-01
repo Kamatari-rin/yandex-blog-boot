@@ -20,5 +20,5 @@ public class LikeDTO {
     @NotNull(message = "Target Type cannot be null")
     private LikeTargetType targetType;
 
-    private boolean isLiked;
+    private boolean liked;
 }

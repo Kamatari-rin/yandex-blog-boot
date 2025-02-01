@@ -1,0 +1,108 @@
+/* 📌 Стили модального окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Добавляем паддинг, чтобы не прилипало к краям экрана */
+}
+
+/* Основной контейнер модального окна */
+.modal-content {
+    background: #2e2e33;
+    padding: 28px; /* Равномерный паддинг по бокам */
+    border-radius: 14px;
+    width: 460px; /* Чуть увеличиваем ширину, чтобы учесть паддинги */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    color: #e0e0e0;
+}
+
+/* Заголовки и метки */
+.modal-content label {
+    display: block;
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 500; /* Убираем жирность, делаем более элегантным */
+    color: #b0b0b0; /* Мягкий серый вместо резкого красного */
+}
+
+/* Поля ввода */
+.modal-content input,
+.modal-content textarea {
+    width: calc(100% - 2px); /* Учитываем границу, чтобы поля не выходили за край */
+    padding: 12px;
+    margin-top: 6px;
+    border: 1px solid #55555b;
+    border-radius: 8px;
+    background-color: #3d3d42;
+    color: #e0e0e0;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s, background 0.3s, box-shadow 0.3s;
+    box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+/* Убираем проблему прижатия к краю */
+.modal-content input,
+.modal-content textarea {
+    padding-left: 14px; /* Добавляем отступ слева */
+    padding-right: 14px; /* Добавляем отступ справа */
+}
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+    color: #999;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    border-color: #ff5c5c; /* Новый современный оттенок красного */
+    background-color: #44444a;
+}
+
+/* Кнопки */
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end; /* Выравниваем вправо */
+    margin-top: 24px;
+    gap: 12px; /* Добавляем пространство между кнопками */
+}
+
+/* Кнопка "Отправить" */
+.submit-button {
+    background: #ff5c5c; /* Более мягкий красный */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.submit-button:hover {
+    background: #e04848; /* Чуть затемненный вариант при наведении */
+    transform: scale(1.05);
+}
+
+/* Кнопка "Отмена" */
+.cancel-button {
+    background: #55565d; /* Нейтральный серый, не акцентный */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.cancel-button:hover {
+    background: #44454a; /* Чуть темнее при наведении */
+    transform: scale(1.05);
+}

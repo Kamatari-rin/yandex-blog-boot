@@ -3,6 +3,8 @@ package org.example.config;
 import com.zaxxer.hikari.HikariDataSource;
 import org.example.model.Comment;
 import org.example.model.Post;
+import org.example.repository.CommentRepository;
+import org.example.repository.PostRepository;
 import org.example.repository.impl.CommentRepositoryImpl;
 import org.example.repository.impl.PostRepositoryImpl;
 import org.example.util.DatabaseHealthCheck;
@@ -44,13 +46,9 @@ public class DatabaseConfig {
         return new JdbcTemplate(dataSource);
     }
 
-    @Bean
-    public CommentRepositoryImpl commentRepository(JdbcTemplate jdbcTemplate, RowMapper<Comment> commentRowMapper) {
-        return new CommentRepositoryImpl(jdbcTemplate, commentRowMapper);
-    }
 
     @Bean
-    public PostRepositoryImpl postRepository(JdbcTemplate jdbcTemplate, RowMapper<Post> postRowMapper) {
+    public PostRepository postRepository(JdbcTemplate jdbcTemplate, RowMapper<Post> postRowMapper) {
         return new PostRepositoryImpl(jdbcTemplate, postRowMapper);
     }
 

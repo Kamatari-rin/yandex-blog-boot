@@ -15,7 +15,7 @@ public class LikeRowMapper implements RowMapper<Like> {
                 .userId(rs.getLong("user_id"))
                 .targetId(rs.getLong("target_id"))
                 .targetType(LikeTargetType.fromId(rs.getInt("target_type_id")))
-                .isLiked(rs.getBoolean("is_liked"))
+                .liked(rs.getBoolean("is_liked"))
                 .build();
     }
 }

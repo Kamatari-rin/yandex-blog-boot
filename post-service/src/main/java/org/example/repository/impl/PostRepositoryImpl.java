@@ -6,8 +6,11 @@ import org.example.repository.PostRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class PostRepositoryImpl extends AbstractRepositoryImpl<Post> implements PostRepository {
@@ -70,6 +73,47 @@ public class PostRepositoryImpl extends AbstractRepositoryImpl<Post> implements 
         String sql = "SELECT COUNT(*) FROM comments WHERE post_id = ?";
 
         return jdbcTemplate.queryForObject(sql, Integer.class, postId);
+    }
+
+    @Override
+    public List<Post> findPostsByTag(String tagName) {
+        String sql = """
+        SELECT 
+            p.id, 
+            p.title, 
+            p.content, 
+            p.image_url, 
+            p.user_id, 
+            p.created_at, 
+            p.updated_at,
+            STRING_AGG(t.name, ',') AS tags
+        FROM posts p
+        JOIN post_tags pt ON p.id = pt.post_id
+        JOIN tags t ON pt.tag_id = t.id
+        WHERE t.name ILIKE ?
+        GROUP BY p.id
+    """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Post post = new Post();
+            post.setId(rs.getLong("id"));
+            post.setTitle(rs.getString("title"));
+            post.setContent(rs.getString("content"));
+            post.setImageUrl(rs.getString("image_url"));
+            post.setUserId(rs.getLong("user_id"));
+            post.setCreatedAt(rs.getTimestamp("created_at").toInstant());
+            post.setUpdatedAt(rs.getTimestamp("updated_at").toInstant());
+
+            String tagString = rs.getString("tags");
+            if (tagString != null) {
+                Set<Tag> tags = Arrays.stream(tagString.split(","))
+                        .map(tag -> new Tag(null, tag.trim()))
+                        .collect(Collectors.toSet());
+                post.setTags(tags);
+            }
+
+            return post;
+        }, "%" + tagName + "%"); // Добавляем "%" для частичного поиска
     }
 
     private void deleteTagsForPost(Long postId) {

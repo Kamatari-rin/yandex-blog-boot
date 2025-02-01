@@ -1,0 +1,214 @@
+/* 📌 Основной контейнер поста */
+.post-page {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #313135;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+/* 📸 Картинка */
+.post-page-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+/* 📸 Поле редактирования ссылки на картинку */
+.post-page-image-url {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #55555b;
+    border-radius: 8px;
+    background-color: #3d3d42;
+    color: #e0e0e0;
+    font-size: 14px;
+}
+
+/* 📌 Заголовок + Дата + Действия */
+.post-page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+/* 📌 Заголовок */
+.post-page-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 8px;
+}
+
+/* 📌 Поле редактирования заголовка */
+.post-page-title-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #55555b;
+    border-radius: 8px;
+    background-color: #3d3d42;
+    color: #e0e0e0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 📅 Дата создания */
+.post-page-date {
+    font-size: 14px;
+    color: #b0b0b0;
+    margin-bottom: 12px;
+}
+
+/* 📌 Ссылки "Редактировать" и "Удалить" */
+.post-page-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.post-page-actions a {
+    text-decoration: none;
+    color: #b0b0b0;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.post-page-actions a:hover {
+    color: #ffffff;
+}
+
+/* 📜 Текст поста */
+.post-page-content {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #d0d0e0;
+    margin-bottom: 24px;
+}
+
+/* 📜 Поле редактирования контента (автоматическое растяжение) */
+.post-page-content-input {
+    width: 100%;
+    min-height: 50px; /* Минимальная высота */
+    padding: 10px;
+    border: 1px solid #55555b;
+    border-radius: 8px;
+    background-color: #3d3d42;
+    color: #e0e0e0;
+    font-size: 16px;
+    line-height: 1.6;
+    resize: none; /* ❌ Убираем стандартное изменение размера */
+    overflow: hidden; /* ❌ Убираем прокрутку */
+}
+
+/* 🔖 Теги */
+.post-page-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px; /* Увеличиваем отступ перед счетчиком лайков */
+}
+
+/* 🔖 Поле редактирования тегов */
+.post-page-tags-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #55555b;
+    border-radius: 8px;
+    background-color: #3d3d42;
+    color: #e0e0e0;
+    font-size: 14px;
+}
+
+/* 🔖 Тег */
+.post-page-tag {
+    background: #44444a;
+    color: #e0e0e0;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* ❤️ Лайки и комментарии (унифицированный стиль) */
+.post-page-info {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: #b0b0b0;
+    font-weight: 500;
+}
+
+.post-page-info .icon {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.post-page-info svg {
+    width: 18px;
+    height: 18px;
+    fill: #b0b0b0;
+    transition: fill 0.3s;
+}
+
+.post-page-info svg:hover {
+    fill: #ffffff;
+}
+
+/* 🔘 Кнопки "Сохранить" и "Отмена" */
+.post-page-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.post-page-save-button,
+.post-page-cancel-button {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.post-page-save-button {
+    background: #4b8bff;
+    color: white;
+}
+
+.post-page-save-button:hover {
+    background: #3778e0;
+    transform: scale(1.05);
+}
+
+.post-page-cancel-button {
+    background: #55565d;
+    color: white;
+}
+
+.post-page-cancel-button:hover {
+    background: #44454a;
+    transform: scale(1.05);
+}
+
+/* 💬 Секция комментариев (ширина = ширина контента) */
+.post-page-comments {
+    max-width: 800px;
+    margin: 32px auto 0;
+    padding-top: 24px;
+    border-top: 2px solid #44444a;
+}
+
+.post-page-comments-title {
+    font-size: 20px;
+    color: #e0e0e0;
+    margin-bottom: 16px;
+}

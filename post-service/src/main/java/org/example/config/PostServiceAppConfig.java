@@ -4,9 +4,14 @@ import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.util.Timeout;
+import org.example.mapper.CommentMapper;
 import org.example.mapper.PostMapper;
 import org.example.repository.PostRepository;
+import org.example.repository.impl.CommentRepositoryImpl;
+import org.example.service.CommentService;
+import org.example.service.PostService;
 import org.example.service.UserServiceClient;
+import org.example.service.impl.CommentServiceImpl;
 import org.example.service.impl.PostServiceImpl;
 import org.example.service.impl.UserServiceClientImpl;
 import org.springframework.context.annotation.*;
@@ -57,14 +62,15 @@ public class PostServiceAppConfig {
 
 
     @Bean
-    public UserServiceClientImpl userServiceClient(RestTemplate restTemplate) {
+    public UserServiceClient userServiceClient(RestTemplate restTemplate) {
         return new UserServiceClientImpl(restTemplate);
     }
 
     @Bean
-    public PostServiceImpl postService(PostRepository postRepository, UserServiceClient userServiceClient, PostMapper postMapper) {
+    public PostService postService(PostRepository postRepository, UserServiceClient userServiceClient, PostMapper postMapper) {
         return new PostServiceImpl(postRepository, userServiceClient, postMapper);
     }
+
 
     @Bean
     public LocalValidatorFactoryBean validatorFactory() {

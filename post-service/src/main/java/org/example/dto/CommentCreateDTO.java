@@ -11,12 +11,16 @@ import lombok.*;
 @AllArgsConstructor
 public class CommentCreateDTO {
 
-    @NotNull
+    @NotNull(message = "Content cannot be null")
     @Size(min = 5, message = "Content must be at least 5 characters long")
     private String content;
 
-    private Long userId;
+    @NotNull(message = "Post ID is required")
     private Long postId;
+
+    @NotNull(message = "User ID is required")
+    private Long userId;
+
     private Long parentCommentId;
 }
 

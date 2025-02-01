@@ -33,16 +33,29 @@ public class LikeServiceImpl implements LikeService {
     public LikeDTO addLike(CreateLikeDTO createLikeDTO) {
         Like like = likeMapper.toEntity(createLikeDTO);
 
+        System.out.println("Перед сохранением в БД: " + like);
+
         Optional<Like> existingLike = likeRepository.findByUserAndTarget(
-                createLikeDTO.getUserId(), createLikeDTO.getTargetId(), createLikeDTO.getTargetType());
+                createLikeDTO.getUserId(), createLikeDTO.getTargetId(), createLikeDTO.getTargetType()
+        );
 
         if (existingLike.isPresent()) {
             throw new RuntimeException("User already liked this target.");
         }
 
         Like savedLike = likeRepository.save(like);
-        return new LikeDTO(savedLike.getId(), savedLike.getUserId(), savedLike.getTargetId(), savedLike.getTargetType(), savedLike.isLiked());
+
+        System.out.println("После сохранения в БД: " + savedLike);
+
+        return new LikeDTO(
+                savedLike.getId(),
+                savedLike.getUserId(),
+                savedLike.getTargetId(),
+                savedLike.getTargetType(),
+                savedLike.isLiked()
+        );
     }
+
 
     @Override
     @Transactional

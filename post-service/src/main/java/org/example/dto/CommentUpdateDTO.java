@@ -17,6 +17,4 @@ public class CommentUpdateDTO {
     private String content;
 
     private Long userId;
-    private Long postId;
-    private Long parentCommentId;
 }

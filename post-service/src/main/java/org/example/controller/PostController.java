@@ -40,10 +40,14 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts(
-            @RequestParam(required = false, defaultValue = "10") Integer limit,
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false, defaultValue = "100") Integer limit,
             @RequestParam(required = false, defaultValue = "0") Integer offset) {
-        List<PostDTO> posts = postService.getAllPosts(limit, offset);
-        return ResponseEntity.ok(posts);
+        if (tag != null && !tag.trim().isEmpty()) {
+            return ResponseEntity.ok(postService.getPostsByTag(tag));
+        } else {
+            return ResponseEntity.ok(postService.getAllPosts(limit, offset));
+        }
     }
 
     @PostMapping

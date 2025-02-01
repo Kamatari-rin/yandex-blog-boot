@@ -16,8 +16,14 @@ public interface CommentMapper {
     @Mapping(target = "updatedAt", ignore = true)
     Comment toEntity(CommentCreateDTO dto);
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+    @Mappings({
+            @Mapping(source = "content", target = "content"),
+            @Mapping(source = "userId", target = "userId"),
+            @Mapping(target = "postId", ignore = true),
+            @Mapping(target = "parentCommentId", ignore = true),
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true)
+    })
     Comment toEntity(CommentUpdateDTO dto);
 
     @Mappings({

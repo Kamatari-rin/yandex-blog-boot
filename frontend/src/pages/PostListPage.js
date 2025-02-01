@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PostList from "../components/PostList";
 
+
 function PostListPage() {
     const [page, setPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(10);

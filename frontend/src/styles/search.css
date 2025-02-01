@@ -1,0 +1,50 @@
+/* 📌 Контейнер для поиска и кнопки */
+.search-bar-container {
+    display: flex;
+    justify-content: space-between; /* Разносим элементы влево и вправо */
+    align-items: center;
+    max-width: 800px; /* Делаем такую же ширину, как у карточек постов */
+    margin: 0 auto 16px; /* Центрируем и добавляем отступ снизу */
+    padding: 0;
+}
+
+/* Поле поиска */
+.search-input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #44444a;
+    background-color: #313135;
+    color: #e0e0e0;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s;
+    max-width: 400px; /* Ограничиваем ширину */
+}
+
+.search-input::placeholder {
+    color: #888;
+}
+
+.search-input:focus {
+    border-color: #ff6b6b;
+}
+
+/* 📌 Кнопка "Новый пост" (будет справа) */
+.new-post-button {
+    padding: 12px 20px;
+    background-color: #FF7043; /* Яркий оранжево-красный */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    white-space: nowrap;
+}
+
+.new-post-button:hover {
+    background-color: #F4511E; /* Чуть темнее при наведении */
+    transform: scale(1.07);
+}

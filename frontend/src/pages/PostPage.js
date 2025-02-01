@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getPostById } from "../services/postService";
+import PostContent from "../components/PostContent";
+import CommentsSection from "../components/CommentsSection";
 
 function PostPage() {
     const { postId } = useParams();
@@ -28,20 +30,8 @@ function PostPage() {
 
     return (
         <div>
-            <h1>{post.title}</h1>
-            <img src={post.imageUrl} alt={post.title} width="300" />
-            <p>{post.content}</p>
-            <div>
-                <span>Теги: {post.tags.join(", ")}</span>
-            </div>
-
-            <button>Редактировать</button>
-            <button>Удалить</button>
-
-            {/* Комментарии */}
-            <div>
-                <h3>Комментарии</h3>
-            </div>
+            <PostContent post={post} />
+            <CommentsSection postId={postId} /> {/* ✅ Передаём postId */}
         </div>
     );
 }

@@ -1,0 +1,32 @@
+/* 🔥 Кнопка "Читать далее" */
+.read-more {
+    padding: 10px 18px;
+    background-color: #ff6b6b;
+    color: white;
+    border-radius: 8px;
+    border: 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.read-more:hover {
+    background-color: #4b5f7d;
+    transform: scale(1.05);
+}
+
+/* 🔄 Кнопки "Назад" и "Вперёд" */
+.pagination .button {
+    padding: 12px 24px;
+    background-color: #6d8c7d;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.pagination .button:hover {
+    background-color: #5c7a6b;
+    transform: scale(1.05);
+}

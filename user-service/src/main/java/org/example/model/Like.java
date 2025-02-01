@@ -15,5 +15,5 @@ public class Like {
     private Long userId;
     private Long targetId;
     private LikeTargetType targetType;
-    private boolean isLiked;
+    private boolean liked;
 }

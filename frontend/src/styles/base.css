@@ -1,0 +1,8 @@
+/* 🎨 Основные стили */
+body {
+    font-family: "Work Sans", sans-serif;
+    background-color: #2a2a2e;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+}

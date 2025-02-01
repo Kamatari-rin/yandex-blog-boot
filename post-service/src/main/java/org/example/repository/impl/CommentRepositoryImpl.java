@@ -4,9 +4,11 @@ import org.example.model.Comment;
 import org.example.repository.CommentRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class CommentRepositoryImpl extends AbstractRepositoryImpl<Comment> implements CommentRepository {
 
     private final JdbcTemplate jdbcTemplate;
