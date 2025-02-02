@@ -26,7 +26,7 @@ function CommentsSection({ postId }) {
         fetchComments(); // Загружаем комментарии при монтировании компонента или изменении postId
     }, [postId]);
 
-    // ✅ Функция для добавления нового комментария
+    // Функция для добавления нового комментария
     const handleAddComment = async () => {
         if (newComment.trim() === "") return;
 
@@ -44,7 +44,7 @@ function CommentsSection({ postId }) {
         }
     };
 
-    // ✅ Функция для удаления комментария
+    // Функция для удаления комментария
     const handleDeleteComment = async (commentId) => {
         try {
             await deleteComment(commentId);
@@ -54,13 +54,13 @@ function CommentsSection({ postId }) {
         }
     };
 
-    // ✅ Функция для начала редактирования комментария
+    // Функция для начала редактирования комментария
     const handleEditComment = (commentId, content) => {
         setEditingCommentId(commentId);
         setEditedCommentContent(content);
     };
 
-    // ✅ Функция для сохранения изменений редактируемого комментария
+    // Функция для сохранения изменений редактируемого комментария
     const handleSaveEdit = async () => {
         if (editedCommentContent.trim() === "") return;
 
@@ -74,13 +74,13 @@ function CommentsSection({ postId }) {
         }
     };
 
-    // ✅ Функция для отмены редактирования
+    // Функция для отмены редактирования
     const handleCancelEdit = () => {
         setEditingCommentId(null); // Выход из режима редактирования
         setEditedCommentContent(""); // Сбросить изменения
     };
 
-    // ✅ Обработчик нажатия на Ctrl+Enter для сохранения комментария
+    // Обработчик нажатия на Ctrl+Enter для сохранения комментария
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && e.ctrlKey) {
             handleSaveEdit();
