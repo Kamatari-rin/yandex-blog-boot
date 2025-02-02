@@ -50,26 +50,43 @@ export const deletePost = async (postId) => {
   }
 };
 
-export const toggleLike = async (postId, userId, currentLikeId) => {
+export const toggleLike = async (postId, userId, currentLikeId, currentLikeState) => {
   try {
+    let likeDTO;
+
+    // Если лайк существует, инвертируем его состояние
     if (currentLikeId) {
-      // ✅ Удаляем лайк по `id`
-      await api.delete(`http://localhost:8081/api/likes/${currentLikeId}`);
-      return { liked: false, likeId: null };
-    } else {
-      // ✅ Ставим лайк
       const response = await api.post("http://localhost:8081/api/likes", {
         userId: userId,
         targetId: postId,
         targetType: "POST",
-        liked: true // ✅ Здесь заменили `isLiked` → `liked`
+        liked: !currentLikeState, // Инвертируем состояние
       });
 
-      if (response.data && response.data.id) {
-        return { liked: true, likeId: response.data.id }; // ✅ Теперь `likeId` сохраняется
+      likeDTO = response.data;
+
+      if (likeDTO && likeDTO.id) {
+        return { liked: likeDTO.liked, likeId: likeDTO.id };
       } else {
-        console.error("Ошибка: сервер не вернул ID лайка", response.data);
-        return { liked: true, likeId: null };
+        console.error("Ошибка: сервер не вернул ID лайка", likeDTO);
+        return { liked: currentLikeState, likeId: currentLikeId }; // Возвращаем текущее состояние
+      }
+    } else {
+      // Ставим новый лайк
+      const response = await api.post("http://localhost:8081/api/likes", {
+        userId: userId,
+        targetId: postId,
+        targetType: "POST",
+        liked: true,
+      });
+
+      likeDTO = response.data;
+
+      if (likeDTO && likeDTO.id) {
+        return { liked: likeDTO.liked, likeId: likeDTO.id };
+      } else {
+        console.error("Ошибка: сервер не вернул ID лайка", likeDTO);
+        return { liked: true, likeId: null }; // Оставляем текущее состояние
       }
     }
   } catch (error) {

@@ -28,22 +28,8 @@ public class LikeController {
     }
 
     @PostMapping
-    public ResponseEntity<LikeDTO> addLike(@RequestBody @Valid CreateLikeDTO createLikeDTO) {
-        LikeDTO likeDTO = likeService.addLike(createLikeDTO);
+    public ResponseEntity<LikeDTO> saveOrUpdateLike(@RequestBody @Valid CreateLikeDTO createLikeDTO) {
+        LikeDTO likeDTO = likeService.saveOrUpdateLike(createLikeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<LikeDTO> updateLike(
-            @PathVariable Long id,
-            @RequestParam boolean isLiked) {
-        LikeDTO updatedLike = likeService.updateLike(id, isLiked);
-        return ResponseEntity.ok(updatedLike);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeLike(@PathVariable Long id) {
-        likeService.removeLike(id);
-        return ResponseEntity.noContent().build();
     }
 }

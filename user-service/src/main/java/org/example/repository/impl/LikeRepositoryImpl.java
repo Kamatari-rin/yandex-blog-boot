@@ -41,14 +41,11 @@ public class LikeRepositoryImpl extends AbstractRepositoryImpl<Like> implements 
     }
 
     @Override
-    public Like save(Like like) {
-        String sql = "INSERT INTO " + getTableName() + " (user_id, target_id, target_type_id, is_liked) VALUES (?, ?, ?, ?) RETURNING *";
+    public Like saveOrUpdate(Like like) {
+        String sql = "INSERT INTO " + getTableName() + " (user_id, target_id, target_type_id, is_liked) " +
+                "VALUES (?, ?, ?, ?) ON CONFLICT (user_id, target_id, target_type_id) " +
+                "DO UPDATE SET is_liked = EXCLUDED.is_liked RETURNING *";
         return jdbcTemplate.queryForObject(sql, likeRowMapper, like.getUserId(), like.getTargetId(), like.getTargetType().getId(), like.isLiked());
     }
 
-    @Override
-    public Like update(Like like) {
-        String sql = "UPDATE " + getTableName() + " SET is_liked = ? WHERE id = ? RETURNING *";
-        return jdbcTemplate.queryForObject(sql, likeRowMapper, like.isLiked(), like.getId());
-    }
 }

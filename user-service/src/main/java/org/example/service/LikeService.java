@@ -5,8 +5,7 @@ import org.example.dto.LikeDTO;
 import org.example.enums.LikeTargetType;
 
 public interface LikeService {
+
+    LikeDTO saveOrUpdateLike(CreateLikeDTO createLikeDTO);
     int countLikesByIdAndTarget(Long targetId, LikeTargetType targetType);
-    LikeDTO addLike(CreateLikeDTO createLikeDTO);
-    LikeDTO updateLike(Long id, boolean isLiked);
-    void removeLike(Long id);
 }

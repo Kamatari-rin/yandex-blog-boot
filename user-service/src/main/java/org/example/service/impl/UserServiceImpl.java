@@ -3,6 +3,7 @@ package org.example.service.impl;
 import org.example.dto.CreateUserDTO;
 import org.example.dto.UpdateUserDTO;
 import org.example.dto.UserDTO;
+import org.example.exception.UserNotFoundException;
 import org.example.mapper.UserMapper;
 import org.example.model.User;
 import org.example.repository.UserRepository;
@@ -26,8 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        User user = getUserByIdOrThrow(id);
         return userMapper.toUserDTO(user);
     }
 
@@ -50,8 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO updateUser(Long id, UpdateUserDTO updateUserDTO) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        User user = getUserByIdOrThrow(id);
 
         user.setUsername(updateUserDTO.getUsername());
         user.setEmail(updateUserDTO.getEmail());
@@ -64,5 +63,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id) {
         userRepository.delete(id);
+    }
+
+    private User getUserByIdOrThrow(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 }

@@ -3,6 +3,8 @@ package org.example.service.impl;
 import org.example.dto.CreateLikeDTO;
 import org.example.dto.LikeDTO;
 import org.example.enums.LikeTargetType;
+import org.example.exception.LikeAlreadyExistsException;
+import org.example.exception.LikeNotFoundException;
 import org.example.mapper.LikeMapper;
 import org.example.model.Like;
 import org.example.repository.LikeRepository;
@@ -30,48 +32,20 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @Transactional
-    public LikeDTO addLike(CreateLikeDTO createLikeDTO) {
+    public LikeDTO saveOrUpdateLike(CreateLikeDTO createLikeDTO) {
         Like like = likeMapper.toEntity(createLikeDTO);
 
-        System.out.println("Перед сохранением в БД: " + like);
-
         Optional<Like> existingLike = likeRepository.findByUserAndTarget(
-                createLikeDTO.getUserId(), createLikeDTO.getTargetId(), createLikeDTO.getTargetType()
-        );
+                createLikeDTO.getUserId(), createLikeDTO.getTargetId(), createLikeDTO.getTargetType());
 
-        if (existingLike.isPresent()) {
-            throw new RuntimeException("User already liked this target.");
-        }
+        Like savedLike = existingLike
+                .map(l -> {
+                    l.setLiked(createLikeDTO.isLiked());
+                    return likeRepository.saveOrUpdate(l);
+                })
+                .orElseGet(() -> likeRepository.saveOrUpdate(like));
 
-        Like savedLike = likeRepository.save(like);
-
-        System.out.println("После сохранения в БД: " + savedLike);
-
-        return new LikeDTO(
-                savedLike.getId(),
-                savedLike.getUserId(),
-                savedLike.getTargetId(),
-                savedLike.getTargetType(),
-                savedLike.isLiked()
-        );
-    }
-
-
-    @Override
-    @Transactional
-    public LikeDTO updateLike(Long id, boolean isLiked) {
-        Like like = likeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Like not found with id: " + id));
-
-        like.setLiked(isLiked);
-        Like updatedLike = likeRepository.update(like);
-        return new LikeDTO(updatedLike.getId(), updatedLike.getUserId(), updatedLike.getTargetId(), updatedLike.getTargetType(), updatedLike.isLiked());
-    }
-
-    @Override
-    @Transactional
-    public void removeLike(Long id) {
-        likeRepository.delete(id);
+        return likeMapper.toDTO(savedLike);
     }
 }
 

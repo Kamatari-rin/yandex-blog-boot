@@ -10,7 +10,5 @@ public interface LikeRepository extends AbstractRepository<Like> {
 
     Optional<Like> findByUserAndTarget(Long userId, Long targetId, LikeTargetType targetType);
 
-    Like save(Like like);
-
-    Like update(Like like);
+    Like saveOrUpdate(Like like);
 }

@@ -27,6 +27,9 @@ CREATE TABLE IF NOT EXISTS user_service.likes (
                                                   FOREIGN KEY (target_type_id) REFERENCES user_service.target_types(id)
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS idx_likes_user_target
+    ON user_service.likes (user_id, target_id, target_type_id);
+
 INSERT INTO user_service.target_types (type_name)
 VALUES ('POST'), ('COMMENT')
 ON CONFLICT (type_name) DO NOTHING;
