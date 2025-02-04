@@ -47,5 +47,4 @@ public class LikeRepositoryImpl extends AbstractRepositoryImpl<Like> implements 
                 "DO UPDATE SET is_liked = EXCLUDED.is_liked RETURNING *";
         return jdbcTemplate.queryForObject(sql, likeRowMapper, like.getUserId(), like.getTargetId(), like.getTargetType().getId(), like.isLiked());
     }
-
 }

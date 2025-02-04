@@ -23,14 +23,12 @@ public class UserRepositoryImpl extends AbstractRepositoryImpl<User> implements 
     @Override
     public User save(User user) {
         String sql = "INSERT INTO " + getTableName() +
-                " (username, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?) RETURNING *";
+                " (username, email, password) VALUES (?, ?, ?) RETURNING *";
 
         return jdbcTemplate.queryForObject(sql, userRowMapper,
                 user.getUsername(),
                 user.getEmail(),
-                user.getPassword(),
-                Timestamp.from(user.getCreatedAt()),
-                Timestamp.from(user.getUpdatedAt()));
+                user.getPassword());
     }
 
     @Override

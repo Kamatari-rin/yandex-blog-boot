@@ -35,3 +35,4 @@ public class UserServiceAppConfig {
         return new LocalValidatorFactoryBean();
     }
 }
+
