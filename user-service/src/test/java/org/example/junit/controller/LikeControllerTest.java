@@ -1,7 +1,8 @@
-package org.example.controller;
+package org.example.junit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.config.LikeControllerTestConfig;
+import org.example.junit.config.LikeControllerTestConfig;
+import org.example.controller.LikeController;
 import org.example.dto.CreateLikeDTO;
 import org.example.dto.LikeDTO;
 import org.example.enums.LikeTargetType;

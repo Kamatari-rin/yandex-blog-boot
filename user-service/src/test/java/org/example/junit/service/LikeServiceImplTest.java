@@ -1,12 +1,13 @@
-package org.example.service;
+package org.example.junit.service;
 
-import org.example.config.LikeServiceTestConfig;
+import org.example.junit.config.LikeServiceTestConfig;
 import org.example.dto.CreateLikeDTO;
 import org.example.dto.LikeDTO;
 import org.example.enums.LikeTargetType;
 import org.example.mapper.LikeMapper;
 import org.example.model.Like;
 import org.example.repository.LikeRepository;
+import org.example.service.LikeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

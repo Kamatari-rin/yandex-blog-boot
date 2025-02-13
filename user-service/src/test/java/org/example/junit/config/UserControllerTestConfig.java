@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.junit.config;
 
 import org.example.controller.LikeController;
 import org.example.dto.UserDTO;

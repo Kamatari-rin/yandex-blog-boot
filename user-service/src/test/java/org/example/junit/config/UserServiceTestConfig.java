@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.junit.config;
 
 import org.example.mapper.LikeMapper;
 import org.example.mapper.UserMapper;

@@ -1,6 +1,6 @@
-package org.example.service;
+package org.example.junit.service;
 
-import org.example.config.UserServiceTestConfig;
+import org.example.junit.config.UserServiceTestConfig;
 import org.example.dto.CreateUserDTO;
 import org.example.dto.UpdateUserDTO;
 import org.example.dto.UserDTO;
@@ -8,6 +8,7 @@ import org.example.exception.UserNotFoundException;
 import org.example.model.User;
 import org.example.repository.UserRepository;
 import org.example.mapper.UserMapper;
+import org.example.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

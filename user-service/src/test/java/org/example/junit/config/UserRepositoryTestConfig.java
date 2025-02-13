@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.junit.config;
 
 import org.example.model.User;
 import org.example.repository.impl.UserRepositoryImpl;

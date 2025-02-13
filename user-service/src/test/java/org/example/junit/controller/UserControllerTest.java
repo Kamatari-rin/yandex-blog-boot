@@ -1,9 +1,10 @@
-package org.example.controller;
+package org.example.junit.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.example.config.UserControllerTestConfig;
+import org.example.junit.config.UserControllerTestConfig;
+import org.example.controller.UserController;
 import org.example.dto.CreateUserDTO;
 import org.example.dto.UpdateUserDTO;
 import org.example.dto.UserDTO;

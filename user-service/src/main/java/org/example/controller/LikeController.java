@@ -30,6 +30,7 @@ public class LikeController {
     @PostMapping
     public ResponseEntity<LikeDTO> saveOrUpdateLike(@RequestBody @Valid CreateLikeDTO createLikeDTO) {
         LikeDTO likeDTO = likeService.saveOrUpdateLike(createLikeDTO);
+        System.out.println("Ответ лайк: " + likeDTO.toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
     }
 }

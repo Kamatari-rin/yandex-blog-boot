@@ -11,17 +11,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PostRowMapper implements RowMapper<Post> {
-    private final JdbcTemplate jdbcTemplate;
 
     public PostRowMapper(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Post mapRow(ResultSet rs, int rowNum) throws SQLException {
         Long postId = rs.getLong("id");
-
-        Set<Tag> tags = getTagsByPostId(postId);
 
         Timestamp createdAtTimestamp = rs.getTimestamp("created_at");
         Timestamp updatedAtTimestamp = rs.getTimestamp("updated_at");
@@ -34,14 +30,7 @@ public class PostRowMapper implements RowMapper<Post> {
                 .userId(rs.getLong("user_id"))
                 .createdAt(createdAtTimestamp != null ? createdAtTimestamp.toInstant() : null)
                 .updatedAt(updatedAtTimestamp != null ? updatedAtTimestamp.toInstant() : null)
-                .tags(tags)
+                .tags(new HashSet<>())
                 .build();
-    }
-
-    private Set<Tag> getTagsByPostId(Long postId) {
-        String sql = "SELECT t.id, t.name FROM tags t " +
-                "JOIN post_tags pt ON t.id = pt.tag_id " +
-                "WHERE pt.post_id = ?";
-        return new HashSet<>(jdbcTemplate.query(sql, new TagRowMapper(), postId));
     }
 }

@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.junit.config;
 
 import org.example.model.Like;
 import org.example.repository.LikeRepository;

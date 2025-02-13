@@ -1,8 +1,9 @@
-package org.example.repository;
+package org.example.junit.repository;
 
-import org.example.config.LikeRepositoryTestConfig;
+import org.example.junit.config.LikeRepositoryTestConfig;
 import org.example.enums.LikeTargetType;
 import org.example.model.Like;
+import org.example.repository.LikeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,7 +1,8 @@
-package org.example.repository;
+package org.example.junit.repository;
 
-import org.example.config.UserRepositoryTestConfig;
+import org.example.junit.config.UserRepositoryTestConfig;
 import org.example.model.User;
+import org.example.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
