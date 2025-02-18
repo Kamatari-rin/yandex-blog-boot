@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UpdateUserDTO {
 
     @NotNull(message = "Username cannot be null")

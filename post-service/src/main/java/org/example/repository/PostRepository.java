@@ -3,6 +3,7 @@ package org.example.repository;
 import org.example.model.Post;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface PostRepository extends AbstractRepository<Post> {
@@ -12,6 +13,10 @@ public interface PostRepository extends AbstractRepository<Post> {
 
     int countCommentsByPostId(Long postId);
 
+    List<Post> findAllPostsWithTags(int limit, int offset);
+
     List<Post> findPostsByTag(String tagName);
+
+    Optional<Post> findPostWithTagsById(Long id);
 }
 

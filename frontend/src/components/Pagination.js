@@ -1,12 +1,26 @@
-const Pagination = ({ page, setPage }) => (
-    <div className="pagination">
-        <button onClick={() => setPage(page - 1)} disabled={page === 1} className="button">
+import React from "react";
+
+const Pagination = ({ page, onPageChange, isNextDisabled, className = "" }) => (
+    <nav className={`pagination ${className}`} aria-label="Пагинация">
+        <button
+            onClick={() => onPageChange(page - 1)}
+            disabled={page === 1}
+            className="button"
+            aria-label="Предыдущая страница"
+        >
             Назад
         </button>
-        <button onClick={() => setPage(page + 1)} className="button">
+        <span className="page-number">{page}</span>
+        <button
+            onClick={() => onPageChange(page + 1)}
+            disabled={isNextDisabled}
+            className="button"
+            aria-label="Следующая страница"
+        >
             Вперед
         </button>
-    </div>
+    </nav>
 );
 
 export default Pagination;
+

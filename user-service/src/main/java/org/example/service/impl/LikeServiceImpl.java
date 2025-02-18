@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import org.example.dto.CreateLikeDTO;
 import org.example.dto.LikeDTO;
+import org.example.dto.LikeStatusDTO;
 import org.example.enums.LikeTargetType;
 import org.example.exception.LikeAlreadyExistsException;
 import org.example.exception.LikeNotFoundException;
@@ -12,7 +13,9 @@ import org.example.service.LikeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LikeServiceImpl implements LikeService {
@@ -46,6 +49,15 @@ public class LikeServiceImpl implements LikeService {
                 .orElseGet(() -> likeRepository.saveOrUpdate(like));
 
         return likeMapper.toDTO(savedLike);
+    }
+
+    @Override
+    public List<LikeStatusDTO> getLikesStatuses(List<Long> targetIds, Long userId, LikeTargetType targetType) {
+        List<Like> likes = likeRepository.findByUserIdAndTargetIdsAndType(userId, targetIds, targetType);
+
+        return likes.stream()
+                .map(like -> new LikeStatusDTO(like.getTargetId(), like.getTargetType(), like.isLiked()))
+                .collect(Collectors.toList());
     }
 }
 

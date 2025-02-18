@@ -2,6 +2,7 @@ package org.example.config;
 
 import org.example.mapper.CommentRowMapper;
 import org.example.mapper.PostRowMapper;
+import org.example.mapper.PostRowMapperWithTags;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +19,11 @@ public class MapperConfig {
     @Bean
     public PostRowMapper postRowMapper() {
         return new PostRowMapper(jdbcTemplate);
+    }
+
+    @Bean
+    public PostRowMapperWithTags postRowMapperWithTags() {
+        return new PostRowMapperWithTags();
     }
 
     @Bean

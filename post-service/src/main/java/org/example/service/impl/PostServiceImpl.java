@@ -3,6 +3,7 @@ package org.example.service.impl;
 import org.example.dto.PostCreateDTO;
 import org.example.dto.PostDTO;
 import org.example.dto.PostUpdateDTO;
+import org.example.mapper.PostRowMapperWithTags;
 import org.example.model.Post;
 import org.example.repository.PostRepository;
 import org.example.service.PostService;
@@ -19,7 +20,9 @@ public class PostServiceImpl implements PostService {
     private final UserServiceClient userServiceClient;
     private final PostMapper postMapper;
 
-    public PostServiceImpl(PostRepository postRepository, UserServiceClient userServiceClient, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository,
+                           UserServiceClient userServiceClient,
+                           PostMapper postMapper) {
         this.postRepository = postRepository;
         this.userServiceClient = userServiceClient;
         this.postMapper = postMapper;
@@ -27,7 +30,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getPostById(Long postId) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findPostWithTagsById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
 
         return postMapper.toPostDTO(post, userServiceClient, postRepository);
@@ -35,7 +38,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDTO> getAllPosts(int limit, int offset) {
-        return postRepository.findAll(limit, offset)
+        return postRepository.findAllPostsWithTags(limit, offset)
                 .stream()
                 .map(post -> postMapper.toPostDTO(post, userServiceClient, postRepository))
                 .collect(Collectors.toList());

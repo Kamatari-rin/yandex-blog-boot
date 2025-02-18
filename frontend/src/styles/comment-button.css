@@ -1,0 +1,33 @@
+/* ===========================
+   Стили для кнопки комментариев
+=========================== */
+.comment-button {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--muted-text);
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+    font-size: 14px;
+}
+
+.comment-button:hover {
+    color: #ffffff;
+}
+
+.comment-button__svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--muted-text);
+    transition: fill 0.3s ease-in-out;
+    margin-right: 6px;
+}
+
+.comment-button:hover .comment-button__svg {
+    fill: var(--primary-color);
+}
+
+.comment-count {
+    margin-left: 4px;
+}

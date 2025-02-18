@@ -80,7 +80,7 @@ public class PostServiceImplTest {
         Long postId = 1L;
         PostDTO expectedPost = createPostDTO(postId, "Test Title", "Test Content");
 
-        when(postRepository.findById(postId)).thenReturn(Optional.of(new Post()));  // Мокаем репозиторий
+        when(postRepository.findPostWithTagsById(postId)).thenReturn(Optional.of(new Post()));  // Мокаем репозиторий
         when(postMapper.toPostDTO(any(Post.class), eq(userServiceClient), eq(postRepository))).thenReturn(expectedPost);
 
         PostDTO result = postService.getPostById(postId);

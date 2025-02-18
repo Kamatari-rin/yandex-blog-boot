@@ -1,0 +1,16 @@
+/* ===========================
+   Стили для кнопки лайка
+=========================== */
+
+.like-button {
+    display: inline-flex;
+    align-items: center;
+}
+
+.like-button__svg.liked {
+    fill: var(--primary-color);
+}
+
+.like-count {
+    margin-left: 4px;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import api from "../api";
+import api from "../api/index";
 
 function TestButtons() {
   const [message, setMessage] = useState("Нажмите на кнопку для проверки API");

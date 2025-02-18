@@ -103,6 +103,9 @@ public class DataSourceConfiguration {
             }
 
             System.out.println("Связи между постами и тегами успешно созданы.");
+            jdbcTemplate.execute("TRUNCATE TABLE post_service.post_tags CASCADE");
+            jdbcTemplate.execute("TRUNCATE TABLE post_service.posts CASCADE");
+            jdbcTemplate.execute("TRUNCATE TABLE post_service.tags CASCADE");
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при проверке связей: " + e.getMessage(), e);
         }

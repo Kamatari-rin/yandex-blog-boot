@@ -1,34 +1,58 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { getPosts } from "../api/postsAPI"; // Импорт постов
+import { getPostLikesStatuses, toggleLike } from "../api/likesAPI"; // Импорт лайков
 
-// Создание контекста для лайков
 const LikeContext = createContext();
 
-// Провайдер контекста
 export const LikeProvider = ({ children }) => {
-    // Храним лайки каждого поста по ID
     const [likedPosts, setLikedPosts] = useState({});
+    const userId = 1; // Константа пользователя
 
-    // Функция для обновления состояния лайка
-    const toggleLike = (postId, liked) => {
-        setLikedPosts((prevState) => {
-            const newState = { ...prevState };
-            if (liked) {
-                // Если лайк уже поставлен, снимаем его
-                delete newState[postId];
-            } else {
-                // Если лайк не поставлен, ставим его
-                newState[postId] = true;
+    // Загружаем данные о лайках для всех постов
+    useEffect(() => {
+        const fetchPostsAndLikes = async () => {
+            try {
+                const posts = await getPosts();
+                const postIds = posts.map((post) => post.id);
+                const likesData = await getPostLikesStatuses(postIds, userId);
+                const likedState = likesData.reduce((acc, { targetId, liked, targetType }) => {
+                    acc[targetId] = { liked, targetType };
+                    return acc;
+                }, {});
+                setLikedPosts(likedState);
+            } catch (error) {
+                console.error("Ошибка при загрузке лайков:", error);
             }
-            return newState;
-        });
+        };
+
+        fetchPostsAndLikes();
+    }, []);
+
+    const handleToggleLike = async (targetId, currentLikeState, targetType) => {
+        const newLikedState = !currentLikeState;  // Новое состояние
+        // Обновляем локальное состояние оптимистично
+        setLikedPosts((prevState) => ({
+            ...prevState,
+            [targetId]: { liked: newLikedState, targetType },
+        }));
+
+        try {
+            await toggleLike({ userId, targetId, targetType, liked: newLikedState });
+        } catch (error) {
+            console.error("Ошибка при обновлении лайка на сервере", error);
+            // Откат в случае ошибки
+            setLikedPosts((prevState) => ({
+                ...prevState,
+                [targetId]: { liked: currentLikeState, targetType },
+            }));
+        }
     };
 
     return (
-        <LikeContext.Provider value={{ likedPosts, toggleLike }}>
+        <LikeContext.Provider value={{ likedPosts, toggleLike: handleToggleLike }}>
             {children}
         </LikeContext.Provider>
     );
 };
 
-// Хук для использования контекста
 export const useLikes = () => useContext(LikeContext);

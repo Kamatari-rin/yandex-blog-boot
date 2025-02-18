@@ -6,6 +6,9 @@ import org.example.repository.LikeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class LikeRepositoryImpl extends AbstractRepositoryImpl<Like> implements LikeRepository {
@@ -46,5 +49,23 @@ public class LikeRepositoryImpl extends AbstractRepositoryImpl<Like> implements 
                 "VALUES (?, ?, ?, ?) ON CONFLICT (user_id, target_id, target_type_id) " +
                 "DO UPDATE SET is_liked = EXCLUDED.is_liked RETURNING *";
         return jdbcTemplate.queryForObject(sql, likeRowMapper, like.getUserId(), like.getTargetId(), like.getTargetType().getId(), like.isLiked());
+    }
+
+    @Override
+    public List<Like> findByUserIdAndTargetIdsAndType(Long userId, List<Long> targetIds, LikeTargetType targetType) {
+        if (targetIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        String inSql = String.join(",", Collections.nCopies(targetIds.size(), "?"));
+        String sql = "SELECT * FROM " + getTableName() +
+                " WHERE user_id = ? AND target_id IN (" + inSql + ") AND target_type_id = ?";
+
+        List<Object> params = new ArrayList<>();
+        params.add(userId);
+        params.addAll(targetIds);
+        params.add(targetType.getId());
+
+        return jdbcTemplate.query(sql, likeRowMapper, params.toArray());
     }
 }

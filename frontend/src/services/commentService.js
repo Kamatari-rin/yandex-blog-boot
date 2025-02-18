@@ -1,4 +1,4 @@
-import api from "../api";
+import api from "../api/index";
 
 // ✅ Получить комментарии по `postId`
 export const getCommentsByPostId = async (postId) => {

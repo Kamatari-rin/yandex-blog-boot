@@ -1,0 +1,22 @@
+/* ============================= */
+/*           Variables         */
+/* ============================= */
+:root {
+    /* Основные цвета */
+    --bg-color: #2a2a2e;
+    --primary-color: #ff6b6b;
+    --primary-hover: #ff4b4b;
+    --secondary-color: #313135;
+    --accent-color: #ff7043;
+    --accent-hover: #f4511e;
+    --text-color: #e0e0e0;
+    --muted-text: #b0b0b0;
+    --border-color: #44444a;
+    --input-bg: #313135;
+    --input-focus-border: #ff6b6b;
+
+    /* Отступы и размеры */
+    --container-max-width: 800px;
+    --border-radius: 12px;
+    --padding-default: 24px;
+}

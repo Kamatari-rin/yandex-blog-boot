@@ -1,24 +1,10 @@
-/* Заголовки */
+/* ============================= */
+/*        Typography           */
+/* ============================= */
 h1 {
     font-size: 38px;
     font-weight: 700;
     text-align: center;
     margin-bottom: 32px;
-    color: #f5f5f5;
-}
-
-/* ✅ Стили для всех ссылок */
-a {
-    color: #ff6b6b;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s ease-in-out;
-}
-
-a:hover {
-    color: #ff4f4f;
-}
-
-a:visited {
-    color: #d64545;
+    color: var(--text-color);
 }

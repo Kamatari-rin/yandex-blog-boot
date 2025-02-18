@@ -1,40 +1,37 @@
-/* 📌 Секция комментариев */
+/* ============================= */
+/*        Comment Styles       */
+/* ============================= */
 .post-page-comments {
-    max-width: 800px;
-    margin: 32px auto 300px; /* Нижний внешний отступ 300px */
+    max-width: var(--container-max-width);
+    margin: 32px auto 300px;
     padding-top: 24px;
-    border-top: 2px solid #44444a;
+    border-top: 2px solid var(--border-color);
 }
 
-/* Заголовок секции комментариев */
 .post-page-comments-title {
     font-size: 20px;
-    color: #e0e0e0;
+    color: var(--text-color);
     margin-bottom: 16px;
 }
 
-/* Комментарий */
 .comment {
-    background-color: #2a2a2e; /* Темный фон для каждого комментария */
+    background-color: var(--bg-color);
     padding: 16px;
     border-radius: 8px;
     margin-bottom: 16px;
 }
 
-/* Имя пользователя */
 .comment p strong {
-    color: #ff6b6b; /* Цвет для ника пользователя */
+    color: var(--primary-color);
     font-size: 16px;
 }
 
-/* Дата комментария */
 .comment p small {
     display: block;
-    color: #a0a0b3; /* Цвет для даты */
+    color: var(--muted-text);
     margin-bottom: 8px;
 }
 
-/* Текст комментария */
 .comment p {
     color: #d0d0e0;
     font-size: 14px;
@@ -42,11 +39,10 @@
     margin-bottom: 8px;
 }
 
-/* Кнопки редактировать и удалить */
 .comment p button {
     background: transparent;
     border: none;
-    color: #ff6b6b;
+    color: var(--primary-color);
     cursor: pointer;
     font-size: 14px;
     margin-right: 8px;
@@ -57,37 +53,23 @@
     color: #ffffff;
 }
 
-/* Ввод комментария */
-/* Форма для добавления комментария */
-.comment-form textarea {
-    width: 100%;  /* Задаем ширину 100% от родительского контейнера */
-    min-height: 100px; /* Минимальная высота */
-    padding: 10px;
-    border: 1px solid #55555b;
-    border-radius: 8px;
-    background-color: #3d3d42;
-    color: #e0e0e0;
-    font-size: 16px;
-    resize: vertical;  /* Разрешаем только вертикальное растягивание */
-}
-
-
+/* Форма для комментариев */
+.comment-form textarea,
 .comment-input {
     width: 100%;
-    height: 100px;
     padding: 10px;
-    border-radius: 8px;
     border: 1px solid #55555b;
+    border-radius: 8px;
     background-color: #3d3d42;
-    color: #e0e0e0;
+    color: var(--text-color);
     font-size: 16px;
-    resize: vertical; /* Разрешаем вертикальное изменение размера */
+    resize: vertical;
     margin-bottom: 10px;
 }
 
-/* Кнопка "Сохранить" для редактирования */
+/* Кнопки комментариев */
 .comment-submit {
-    background-color: #ff6b6b;
+    background-color: var(--primary-color);
     color: white;
     padding: 8px 16px;
     border: none;
@@ -100,19 +82,11 @@
     background-color: #e04848;
 }
 
-/* При редактировании комментария выделяем поле */
-.comment-input:focus {
-    outline: none;
-    border-color: #ff6b6b; /* Выделение при фокусе */
-    background-color: #44444a;
-}
-
-/* Стили для кнопок редактирования и удаления */
 .comment-edit, .comment-delete {
-    color: #ff6b6b;
+    color: var(--primary-color);
     font-size: 14px;
-    border: none;
     background: none;
+    border: none;
     cursor: pointer;
     margin-right: 10px;
 }
@@ -123,11 +97,10 @@
     text-decoration: underline;
 }
 
-/* Кнопка отмены */
 .comment-cancel {
     padding: 8px 16px;
     background-color: #44454a;
-    color: #ffffff;
+    color: white;
     border: none;
     border-radius: 8px;
     font-weight: 600;

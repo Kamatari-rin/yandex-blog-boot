@@ -48,8 +48,8 @@ public class DatabaseConfig {
 
 
     @Bean
-    public PostRepository postRepository(JdbcTemplate jdbcTemplate, RowMapper<Post> postRowMapper) {
-        return new PostRepositoryImpl(jdbcTemplate, postRowMapper);
+    public PostRepository postRepository(JdbcTemplate jdbcTemplate, RowMapper<Post> postRowMapper, RowMapper<Post> postRowMapperWithTags) {
+        return new PostRepositoryImpl(jdbcTemplate, postRowMapper, postRowMapperWithTags);
     }
 
     @Bean

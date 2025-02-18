@@ -8,6 +8,7 @@ import org.example.enums.LikeTargetType;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CreateLikeDTO {
     private Long userId;
     private Long targetId;

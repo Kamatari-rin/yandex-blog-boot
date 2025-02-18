@@ -9,6 +9,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CommentDTO {
 
     private Long id;

@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CommentCreateDTO {
 
     @NotNull(message = "Content cannot be null")

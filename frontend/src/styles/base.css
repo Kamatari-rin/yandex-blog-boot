@@ -1,8 +1,32 @@
-/* 🎨 Основные стили */
+
+/* ============================= */
+/*         Base Styles         */
+/* ============================= */
 body {
     font-family: "Work Sans", sans-serif;
-    background-color: #2a2a2e;
-    color: #e0e0e0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
+}
+
+/* Ссылки */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+    color: #ff4f4f;
+}
+
+a:visited {
+    color: #d64545;
+}
+
+.container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
 }
