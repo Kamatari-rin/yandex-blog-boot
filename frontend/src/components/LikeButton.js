@@ -7,20 +7,17 @@ const LikeButton = ({ postId, likesCount = 0 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [likeCount, setLikeCount] = useState(likesCount);
 
-    // Читаем актуальное состояние лайка из контекста
     const liked = likedPosts[postId]?.liked || false;
 
     const handleClick = async () => {
         if (isLoading) return;
         setIsLoading(true);
 
-        // Читаем текущее значение лайка из контекста
         const currentLiked = liked;
         const newLikedState = !currentLiked;
         setLikeCount((prevCount) => prevCount + (newLikedState ? 1 : -1));
 
         try {
-            // Передаем уже вычисленное новое состояние
             await toggleLikeContext(postId, currentLiked, "POST");
         } catch (error) {
             console.error("Ошибка при изменении лайка", error);

@@ -14,24 +14,13 @@ button {
     padding: 10px 18px;
     background-color: var(--primary-color);
     color: white;
-    font-weight: 600;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 16px;
 }
 
 .read-more:hover {
     background-color: #4b5f7d;
-    transform: scale(1.05);
-}
-
-/* Кнопки пагинации */
-.pagination .button {
-    padding: 12px 24px;
-    background-color: #6d8c7d;
-    color: white;
-    font-weight: 600;
-}
-
-.pagination .button:hover {
-    background-color: #5c7a6b;
     transform: scale(1.05);
 }
 
@@ -41,8 +30,9 @@ button {
     background-color: var(--accent-color);
     color: white;
     border-radius: 10px;
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: 900;
+    font-size: 20px;
+    text-transform: uppercase;
     white-space: nowrap;
 }
 

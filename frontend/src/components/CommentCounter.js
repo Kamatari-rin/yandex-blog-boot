@@ -6,7 +6,6 @@ const CommentCounter = ({ postId, commentsCount }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        // Переходим на страницу поста с якорем на секцию комментариев
         navigate(`/post/${postId}#comments`);
     };
 

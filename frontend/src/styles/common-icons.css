@@ -9,12 +9,12 @@
     color: var(--muted-text);
     cursor: pointer;
     transition: color 0.3s ease-in-out;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .icon-button svg {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     fill: var(--muted-text);
     transition: fill 0.3s ease-in-out;
     margin-right: 6px;

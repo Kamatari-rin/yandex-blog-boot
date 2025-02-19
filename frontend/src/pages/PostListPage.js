@@ -14,14 +14,15 @@ const PostListPage = () => {
 
     const [page, setPage] = useState(initialPage);
     const [tagsFilter, setTagsFilter] = useState(initialTag);
-
+    const [limit, setLimit] = useState(10);
     const [isAddPostFormVisible, setAddPostFormVisible] = useState(false);
 
     const debouncedTagsFilter = useDebounce(tagsFilter, 500);
 
-    const { posts, loading, error, refetchPosts, totalPages } = usePosts(
+    const { posts, loading, error, refetchPosts, isLastPage } = usePosts(
         debouncedTagsFilter,
-        page
+        page,
+        limit
     );
 
     useEffect(() => {
@@ -32,12 +33,16 @@ const PostListPage = () => {
         setSearchParams(params);
     }, [page, debouncedTagsFilter, setSearchParams]);
 
-
     const onPageChange = useCallback((newPage) => {
         if (newPage > 0) {
             setPage(newPage);
         }
     }, []);
+
+    const handleLimitChange = (newLimit) => {
+        setLimit(newLimit);
+        setPage(1);
+    };
 
     const handleAddPostClick = () => setAddPostFormVisible(true);
     const handleCloseForm = () => setAddPostFormVisible(false);
@@ -63,15 +68,13 @@ const PostListPage = () => {
 
             {isAddPostFormVisible && <AddPostForm onClose={handleCloseForm} />}
             <LoadingError loading={loading} error={error} />
-            <PostList
-                posts={posts}
-                refetchPosts={refetchPosts}
-            />
-
+            <PostList posts={posts} refetchPosts={refetchPosts} />
             <Pagination
                 page={page}
                 onPageChange={onPageChange}
-                isNextDisabled={page >= totalPages}
+                isNextDisabled={isLastPage}
+                limit={limit}
+                onLimitChange={handleLimitChange}
             />
         </main>
     );

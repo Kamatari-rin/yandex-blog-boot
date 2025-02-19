@@ -1,14 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getPosts } from "../api/postsAPI"; // Импорт постов
-import { getPostLikesStatuses, toggleLike } from "../api/likesAPI"; // Импорт лайков
+import { getPosts } from "../api/postsAPI";
+import { getPostLikesStatuses, toggleLike } from "../api/likesAPI";
 
 const LikeContext = createContext();
 
 export const LikeProvider = ({ children }) => {
     const [likedPosts, setLikedPosts] = useState({});
-    const userId = 1; // Константа пользователя
+    const userId = 1;
 
-    // Загружаем данные о лайках для всех постов
     useEffect(() => {
         const fetchPostsAndLikes = async () => {
             try {
@@ -29,8 +28,8 @@ export const LikeProvider = ({ children }) => {
     }, []);
 
     const handleToggleLike = async (targetId, currentLikeState, targetType) => {
-        const newLikedState = !currentLikeState;  // Новое состояние
-        // Обновляем локальное состояние оптимистично
+        const newLikedState = !currentLikeState;
+
         setLikedPosts((prevState) => ({
             ...prevState,
             [targetId]: { liked: newLikedState, targetType },
@@ -40,7 +39,7 @@ export const LikeProvider = ({ children }) => {
             await toggleLike({ userId, targetId, targetType, liked: newLikedState });
         } catch (error) {
             console.error("Ошибка при обновлении лайка на сервере", error);
-            // Откат в случае ошибки
+
             setLikedPosts((prevState) => ({
                 ...prevState,
                 [targetId]: { liked: currentLikeState, targetType },

@@ -58,17 +58,21 @@ const PostPreview = React.memo(({ post }) => {
                 </p>
 
                 <p className="post-content">
-                    {post.content?.length > 100 ? `${post.content.substring(0, 100)}...` : post.content}
+                    {post.content?.length > 100 ? `${post.content.substring(0, 200)}...` : post.content}
                 </p>
 
                 <div className="post-footer">
-                    <LikeButton postId={post.id} likesCount={post.likesCount} />
-                    <CommentCounter postId={post.id} commentsCount={post.commentsCount} />
-                    {post.id && (
-                        <button className="read-more" onClick={handlePostClick}>
-                            Читать далее
-                        </button>
-                    )}
+                    <div className="post-footer-left">
+                        <LikeButton postId={post.id} likesCount={post.likesCount} />
+                        <CommentCounter postId={post.id} commentsCount={post.commentsCount} />
+                    </div>
+                    <div className="post-footer-right">
+                        {post.id && (
+                            <button className="read-more" onClick={handlePostClick}>
+                                Читать далее
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
