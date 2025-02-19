@@ -106,7 +106,15 @@ function CommentsSection({ postId }) {
                         ) : (
                             <p>
                                 <strong>{comment.userName}:</strong> {comment.content}
-                                <small>{new Date(comment.createdAt).toLocaleDateString()}</small>
+                                <small>
+                                    {comment.createdAt
+                                        ? new Intl.DateTimeFormat("ru-RU", {
+                                            day: "2-digit",
+                                            month: "long",
+                                            year: "numeric",
+                                        }).format(new Date(comment.createdAt * 1000))
+                                        : "Дата неизвестна"}
+                                </small>
                                 <button onClick={() => handleEditComment(comment.id, comment.content)} className="comment-edit">Редактировать</button>
                                 <button onClick={() => handleDeleteComment(comment.id)} className="comment-delete">Удалить</button>
                             </p>

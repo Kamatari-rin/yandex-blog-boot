@@ -16,7 +16,7 @@
     --input-focus-border: #ff6b6b;
 
     /* Отступы и размеры */
-    --container-max-width: 800px;
+    --container-max-width: 960px;
     --border-radius: 12px;
-    --padding-default: 24px;
+    --padding-default: 60px;
 }

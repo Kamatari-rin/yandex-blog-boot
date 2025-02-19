@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import LikeButton from "../LikeButton";
+import CommentCounter from "../CommentCounter";
 import PropTypes from "prop-types";
 
 const PostPreview = React.memo(({ post }) => {
     const navigate = useNavigate();
-    console.log(post);
 
     const handlePostClick = () => {
         if (post.id) {
@@ -58,11 +58,12 @@ const PostPreview = React.memo(({ post }) => {
                 </p>
 
                 <p className="post-content">
-                    {post.content?.length > 100 ? `${post.content.substring(0, 300)}...` : post.content}
+                    {post.content?.length > 100 ? `${post.content.substring(0, 100)}...` : post.content}
                 </p>
 
                 <div className="post-footer">
                     <LikeButton postId={post.id} likesCount={post.likesCount} />
+                    <CommentCounter postId={post.id} commentsCount={post.commentsCount} />
                     {post.id && (
                         <button className="read-more" onClick={handlePostClick}>
                             Читать далее
@@ -83,6 +84,8 @@ PostPreview.propTypes = {
         authorName: PropTypes.string,
         createdAt: PropTypes.number,
         tags: PropTypes.arrayOf(PropTypes.string),
+        likesCount: PropTypes.number,
+        commentsCount: PropTypes.number,
     }).isRequired,
 };
 

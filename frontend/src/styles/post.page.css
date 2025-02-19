@@ -12,11 +12,11 @@
 }
 
 .post-page-image {
-    width: calc(100% - 24px);
+    width: calc(100% + 120px);
     max-height: 400px;
     object-fit: cover;
-    border-radius: var(--border-radius);
-    margin-bottom: 16px;
+    border-radius: 12px 12px 0 0;
+    margin: -60px -60px 0 -60px;
 }
 
 .post-page-image-url {
@@ -38,10 +38,12 @@
 }
 
 .post-page-title {
-    font-size: 32px;
-    font-weight: bold;
+    font-size: 67px;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.9;
     color: var(--primary-color);
-    margin-bottom: 8px;
+    margin: 70px 0 20px;
 }
 
 .post-page-title-input {
@@ -59,13 +61,12 @@
 .post-page-date {
     font-size: 14px;
     color: var(--muted-text);
-    margin-bottom: 12px;
+    margin: 12px 0;
 }
 
 .post-page-actions {
     display: flex;
     gap: 12px;
-    margin-bottom: 30px;
 }
 
 .post-page-actions a {
@@ -83,10 +84,10 @@
 .post-page-content {
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-size: 18px;
+    font-size: 24px;
     line-height: 1.6;
     color: #d0d0e0;
-    margin-bottom: 24px;
+    margin-bottom: 45px;
 }
 
 .post-page-content-input {
