@@ -1,0 +1,32 @@
+/* ============================= */
+/*         Search Styles       */
+/* ============================= */
+.search-bar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--container-max-width);
+    margin: 0 auto 16px;
+    padding: 0;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s;
+    max-width: 400px;
+}
+
+.search-input::placeholder {
+    color: #888;
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+}

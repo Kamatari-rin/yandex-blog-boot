@@ -1,0 +1,25 @@
+
+/* ============================= */
+/*         Tag Styles          */
+/* ============================= */
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.tag {
+    background-color: rgba(200, 200, 200, 0.2);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.tag:hover {
+    background-color: rgba(200, 200, 200, 0.2);
+    transform: scale(1.05);
+}

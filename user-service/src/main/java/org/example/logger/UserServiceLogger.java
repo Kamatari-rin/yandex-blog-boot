@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Aspect
 @Component
 public class UserServiceLogger {
@@ -29,7 +31,7 @@ public class UserServiceLogger {
         logger.info("Вход в метод: {}.{} с аргументами: {}",
                 joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName(),
-                joinPoint.getArgs());
+                Arrays.toString(joinPoint.getArgs()));
     }
 
     @AfterReturning(pointcut = "controllerMethods() || serviceMethods() || repositoryMethods()", returning = "result")

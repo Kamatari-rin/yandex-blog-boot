@@ -1,0 +1,114 @@
+/* ============================= */
+/*        Comment Styles       */
+/* ============================= */
+.post-page-comments {
+    max-width: var(--container-max-width);
+    margin: 32px auto 300px;
+    padding-top: 24px;
+    border-top: 2px solid var(--border-color);
+}
+
+.post-page-comments-title {
+    font-size: 20px;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.comment {
+    background-color: var(--bg-color);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.comment p strong {
+    color: var(--primary-color);
+    font-size: 16px;
+}
+
+.comment p small {
+    display: block;
+    color: var(--muted-text);
+    margin-bottom: 8px;
+}
+
+.comment p {
+    color: #d0d0e0;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.comment p button {
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 8px;
+    transition: color 0.3s;
+}
+
+.comment p button:hover {
+    color: #ffffff;
+}
+
+/* Форма для комментариев */
+.comment-form textarea,
+.comment-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #55555b;
+    border-radius: 8px;
+    background-color: #3d3d42;
+    color: var(--text-color);
+    font-size: 16px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+/* Кнопки комментариев */
+.comment-submit {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.comment-submit:hover {
+    background-color: #e04848;
+}
+
+.comment-edit, .comment-delete {
+    color: var(--primary-color);
+    font-size: 14px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.comment-edit:hover,
+.comment-delete:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.comment-cancel {
+    padding: 8px 16px;
+    background-color: #44454a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-left: 30px;
+}
+
+.comment-cancel:hover {
+    background-color: #3e3e44;
+}

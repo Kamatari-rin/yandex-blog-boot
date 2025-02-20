@@ -1,0 +1,24 @@
+/* ============================= */
+/*           Variables         */
+/* ============================= */
+:root {
+    /* Основные цвета */
+    --bg-color: #2a2a2e;
+    --primary-color: #ff6b6b;
+    --primary-hover: #ff4b4b;
+    --secondary-color: #313135;
+    --accent-color: #20C997;
+    --accent-hover: #1BB397;
+    --pagination-color: #4B8BFF;
+    --pagination-hover: #3A79E0;
+    --text-color: #e0e0e0;
+    --muted-text: #b0b0b0;
+    --border-color: #44444a;
+    --input-bg: #313135;
+    --input-focus-border: #ff6b6b;
+
+    /* Отступы и размеры */
+    --container-max-width: 960px;
+    --border-radius: 12px;
+    --padding-default: 60px;
+}

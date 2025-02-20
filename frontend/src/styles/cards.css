@@ -1,0 +1,81 @@
+/* ============================= */
+/*         Card Styles         */
+/* ============================= */
+/* Карточка поста */
+.post-card {
+    display: flex;
+    align-items: stretch;
+    background: var(--secondary-color);
+    padding: var(--padding-default);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    gap: 40px;
+    margin-bottom: 24px;
+    transition: transform 0.2s, box-shadow 0.3s;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Изображение поста */
+.post-image {
+    width: 380px;
+    object-fit: cover;
+    border-radius: 12px 0 0 12px;
+    margin: -60px 0 -60px -60px;
+}
+
+/* Контент поста */
+.post-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: -20px;
+}
+
+.post-title {
+    font-size: 28px;
+    text-transform: uppercase;
+    color: var(--text-color);
+    font-weight: 900;
+    transition: color 0.2s ease-in-out;
+    margin-top: -20px;
+}
+
+.post-title:hover {
+    color: var(--primary-color);
+}
+
+.post-meta {
+    font-size: 15px;
+    color: var(--muted-text);
+    margin-bottom: 12px;
+}
+
+.post-content {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #d0d0e0;
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 -20px;
+}
+
+.post-footer-right {
+
+}
+
+.post-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

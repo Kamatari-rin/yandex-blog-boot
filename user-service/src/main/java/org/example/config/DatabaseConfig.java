@@ -1,6 +1,10 @@
 package org.example.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.example.model.Like;
+import org.example.model.User;
+import org.example.repository.impl.LikeRepositoryImpl;
+import org.example.repository.impl.UserRepositoryImpl;
 import org.example.util.DatabaseHealthCheck;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +14,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
@@ -37,6 +42,16 @@ public class DatabaseConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public UserRepositoryImpl userRepository(JdbcTemplate jdbcTemplate, RowMapper<User> userRowMapper) {
+        return new UserRepositoryImpl(jdbcTemplate, userRowMapper);
+    }
+
+    @Bean
+    public LikeRepositoryImpl likeRepository(JdbcTemplate jdbcTemplate, RowMapper<Like> likeRowMapper) {
+        return new LikeRepositoryImpl(jdbcTemplate, likeRowMapper);
     }
 
     @Bean

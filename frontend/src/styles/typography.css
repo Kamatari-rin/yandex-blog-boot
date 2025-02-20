@@ -1,0 +1,9 @@
+/* ============================= */
+/*        Typography           */
+/* ============================= */
+h1 {
+    font-size: 64px;
+    font-weight: 700;
+    margin: 40px 0 40px;
+    color: var(--text-color);
+}
