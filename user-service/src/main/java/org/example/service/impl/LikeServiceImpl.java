@@ -4,8 +4,6 @@ import org.example.dto.CreateLikeDTO;
 import org.example.dto.LikeDTO;
 import org.example.dto.LikeStatusDTO;
 import org.example.enums.LikeTargetType;
-import org.example.exception.LikeAlreadyExistsException;
-import org.example.exception.LikeNotFoundException;
 import org.example.mapper.LikeMapper;
 import org.example.model.Like;
 import org.example.repository.LikeRepository;

@@ -2,7 +2,6 @@ package org.example.mapper;
 
 import org.example.model.Tag;
 import org.mapstruct.Mapper;
-import org.mapstruct.Named;
 
 import java.util.Set;
 import java.util.stream.Collectors;

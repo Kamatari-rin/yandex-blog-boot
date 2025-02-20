@@ -3,7 +3,6 @@ package org.example.config;
 import com.zaxxer.hikari.HikariDataSource;
 import org.example.model.Like;
 import org.example.model.User;
-import org.example.repository.LikeRepository;
 import org.example.repository.impl.LikeRepositoryImpl;
 import org.example.repository.impl.UserRepositoryImpl;
 import org.example.util.DatabaseHealthCheck;

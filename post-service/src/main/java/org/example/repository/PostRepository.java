@@ -18,5 +18,6 @@ public interface PostRepository extends AbstractRepository<Post> {
     List<Post> findPostsByTag(String tagName);
 
     Optional<Post> findPostWithTagsById(Long id);
+    void deleteAllPosts();
 }
 

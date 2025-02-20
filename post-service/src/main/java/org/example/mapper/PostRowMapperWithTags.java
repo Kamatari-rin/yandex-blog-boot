@@ -21,7 +21,6 @@ public class PostRowMapperWithTags implements RowMapper<Post> {
         Timestamp createdAtTimestamp = rs.getTimestamp("created_at");
         Timestamp updatedAtTimestamp = rs.getTimestamp("updated_at");
 
-        // Читаем агрегированные теги, если они есть
         String tagsStr = rs.getString("tags");
         Set<Tag> tags = new HashSet<>();
         if (tagsStr != null && !tagsStr.trim().isEmpty()) {

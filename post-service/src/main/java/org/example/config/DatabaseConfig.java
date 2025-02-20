@@ -1,11 +1,8 @@
 package org.example.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.example.model.Comment;
 import org.example.model.Post;
-import org.example.repository.CommentRepository;
 import org.example.repository.PostRepository;
-import org.example.repository.impl.CommentRepositoryImpl;
 import org.example.repository.impl.PostRepositoryImpl;
 import org.example.util.DatabaseHealthCheck;
 import org.springframework.beans.factory.annotation.Value;

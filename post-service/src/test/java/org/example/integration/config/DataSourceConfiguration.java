@@ -1,20 +1,17 @@
 package org.example.integration.config;
 
-import org.example.model.Post;
-import org.example.model.Tag;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.HashSet;
 
 @Configuration
 @PropertySource("classpath:application-test.properties")
@@ -46,6 +43,11 @@ public class DataSourceConfiguration {
         checkPostTagsConnections(dataSource);
 
         return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean
@@ -103,9 +105,6 @@ public class DataSourceConfiguration {
             }
 
             System.out.println("Связи между постами и тегами успешно созданы.");
-            jdbcTemplate.execute("TRUNCATE TABLE post_service.post_tags CASCADE");
-            jdbcTemplate.execute("TRUNCATE TABLE post_service.posts CASCADE");
-            jdbcTemplate.execute("TRUNCATE TABLE post_service.tags CASCADE");
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при проверке связей: " + e.getMessage(), e);
         }

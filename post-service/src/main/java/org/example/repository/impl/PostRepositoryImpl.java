@@ -219,4 +219,11 @@ public class PostRepositoryImpl extends AbstractRepositoryImpl<Post> implements 
         String insertSql = "INSERT INTO post_service.tags (name) VALUES (?) RETURNING id";
         return jdbcTemplate.queryForObject(insertSql, Long.class, tagName);
     }
+
+    @Override
+    public void deleteAllPosts() {
+        jdbcTemplate.update("TRUNCATE TABLE post_service.post_tags RESTART IDENTITY CASCADE");
+        jdbcTemplate.update("TRUNCATE TABLE post_service.posts RESTART IDENTITY CASCADE");
+        jdbcTemplate.update("TRUNCATE TABLE post_service.tags RESTART IDENTITY CASCADE");
+    }
 }

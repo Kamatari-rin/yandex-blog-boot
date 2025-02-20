@@ -7,6 +7,7 @@ import org.example.controller.PostController;
 import org.example.mapper.CommentRowMapper;
 import org.example.mapper.PostMapper;
 import org.example.mapper.PostRowMapper;
+import org.example.mapper.PostRowMapperWithTags;
 import org.example.model.Post;
 import org.example.repository.PostRepository;
 import org.example.repository.impl.PostRepositoryImpl;
@@ -14,7 +15,6 @@ import org.example.service.PostService;
 import org.example.service.UserServiceClient;
 import org.example.service.impl.PostServiceImpl;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -73,6 +73,11 @@ public class PostIntegrationTestConfig {
     @Bean
     public PostRowMapper postRowMapper(JdbcTemplate jdbcTemplate) {
         return new PostRowMapper(jdbcTemplate);
+    }
+
+    @Bean
+    public PostRowMapperWithTags postRowMapperWithTags() {
+        return new PostRowMapperWithTags();
     }
 
     @Bean

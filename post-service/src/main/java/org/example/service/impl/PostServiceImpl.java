@@ -3,7 +3,6 @@ package org.example.service.impl;
 import org.example.dto.PostCreateDTO;
 import org.example.dto.PostDTO;
 import org.example.dto.PostUpdateDTO;
-import org.example.mapper.PostRowMapperWithTags;
 import org.example.model.Post;
 import org.example.repository.PostRepository;
 import org.example.service.PostService;
