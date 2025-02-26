@@ -6,7 +6,7 @@ WORKDIR /usr/local/tomcat
 RUN sed -i 's/8080/8081/' conf/server.xml
 
 # Копируем WAR-файл
-COPY target/user-service-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+COPY build/libs/user-service-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8081
 
