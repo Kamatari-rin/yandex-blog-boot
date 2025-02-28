@@ -19,10 +19,10 @@ CREATE TABLE IF NOT EXISTS post_service.tags (
 
 -- Таблица связей постов и тегов
 CREATE TABLE IF NOT EXISTS post_service.post_tags (
+                                                      id BIGSERIAL PRIMARY KEY,
                                                       post_id BIGINT NOT NULL,
                                                       tag_id BIGINT NOT NULL,
                                                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                                      PRIMARY KEY (post_id, tag_id),
                                                       FOREIGN KEY (post_id) REFERENCES post_service.posts(id) ON DELETE CASCADE,
                                                       FOREIGN KEY (tag_id) REFERENCES post_service.tags(id) ON DELETE CASCADE
 );

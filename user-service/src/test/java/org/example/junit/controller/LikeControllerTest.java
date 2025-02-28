@@ -1,47 +1,39 @@
 package org.example.junit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.junit.config.LikeControllerTestConfig;
 import org.example.controller.LikeController;
 import org.example.dto.CreateLikeDTO;
 import org.example.dto.LikeDTO;
 import org.example.enums.LikeTargetType;
 import org.example.service.LikeService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import java.util.Objects;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = LikeControllerTestConfig.class)
-public class LikeControllerTest {
+@WebMvcTest(LikeController.class)
+@ActiveProfiles("test")
+class LikeControllerTest {
 
     @Autowired
-    private LikeController likeController;
-
     private MockMvc mockMvc;
 
     @Autowired
-    private LikeService likeService;
+    private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        this.mockMvc = MockMvcBuilders
-                .standaloneSetup(likeController)
-                .build();
-    }
+    @MockBean
+    private LikeService likeService;
 
     @Test
     void testCountLikes() throws Exception {
@@ -57,7 +49,7 @@ public class LikeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     String responseBody = result.getResponse().getContentAsString();
-                    assertTrue(responseBody.contains(String.valueOf(expectedCount)));
+                    assertTrue(Objects.requireNonNull(responseBody).contains(String.valueOf(expectedCount)));
                 });
     }
 
@@ -70,7 +62,7 @@ public class LikeControllerTest {
 
         mockMvc.perform(post("/api/likes")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(createLikeDTO)))
+                        .content(objectMapper.writeValueAsString(createLikeDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(result -> {
                     String responseBody = result.getResponse().getContentAsString();

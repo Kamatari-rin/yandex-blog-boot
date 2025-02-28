@@ -16,8 +16,6 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "likedPosts", ignore = true)
     @Mapping(target = "dislikedPosts", ignore = true)
-    @Mapping(target = "posts", ignore = true)
-    @Mapping(target = "comments", ignore = true)
     User toEntity(CreateUserDTO dto);
 
     @Mapping(target = "id", ignore = true)
@@ -26,8 +24,6 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "likedPosts", ignore = true)
     @Mapping(target = "dislikedPosts", ignore = true)
-    @Mapping(target = "posts", ignore = true)
-    @Mapping(target = "comments", ignore = true)
     User toEntity(UpdateUserDTO dto);
 
     @Mappings({

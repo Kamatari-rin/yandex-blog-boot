@@ -1,5 +1,6 @@
 package org.example.enums;
 
+
 public enum LikeTargetType {
     POST(1),
     COMMENT(2);

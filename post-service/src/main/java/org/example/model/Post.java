@@ -3,6 +3,11 @@ package org.example.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -14,8 +19,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Post {
-
+@Table("posts")
+public class Post implements Persistable<Long> {
+    @Id
     private Long id;
 
     @NotNull(message = "Title cannot be null")
@@ -28,13 +34,23 @@ public class Post {
 
     private String imageUrl;
 
-    private String authorName;
-
+    @Transient
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
     private Long userId;
 
+    @ReadOnlyProperty
     private Instant createdAt;
     private Instant updatedAt;
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.id == null;
+    }
 }

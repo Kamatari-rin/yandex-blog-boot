@@ -1,16 +1,11 @@
 package org.example;
 
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.startup.Tomcat;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class PostServiceApp {
-    public static void main(String[] args) throws LifecycleException {
-        Tomcat tomcat = new Tomcat();
-        tomcat.setPort(8082);
-
-        tomcat.addWebapp("", System.getProperty("java.io.tmpdir"));
-
-        tomcat.start();
-        tomcat.getServer().await();
+    public static void main(String[] args) {
+        SpringApplication.run(PostServiceApp.class, args);
     }
 }

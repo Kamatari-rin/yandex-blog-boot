@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Getter
 @Setter
@@ -11,8 +13,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Table("tags")
 public class Tag {
-
+    @Id
     private Long id;
 
     @NotNull(message = "Tag name cannot be null")

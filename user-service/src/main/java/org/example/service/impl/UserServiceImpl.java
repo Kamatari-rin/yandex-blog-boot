@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.CreateUserDTO;
 import org.example.dto.UpdateUserDTO;
 import org.example.dto.UserDTO;
@@ -15,25 +16,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public UserDTO getUserById(Long id) {
         User user = getUserByIdOrThrow(id);
         return userMapper.toUserDTO(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers(int limit, int offset) {
-        return userRepository.findAll(limit, offset)
+        return userRepository.findAllUsers(limit, offset)
                 .stream()
                 .map(userMapper::toUserDTO)
                 .collect(Collectors.toList());
@@ -51,18 +50,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO updateUser(Long id, UpdateUserDTO updateUserDTO) {
         User user = getUserByIdOrThrow(id);
-
         user.setUsername(updateUserDTO.getUsername());
         user.setEmail(updateUserDTO.getEmail());
-
-        User updatedUser = userRepository.update(user);
+        User updatedUser = userRepository.save(user);
         return userMapper.toUserDTO(updatedUser);
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
     }
 
     private User getUserByIdOrThrow(Long id) {

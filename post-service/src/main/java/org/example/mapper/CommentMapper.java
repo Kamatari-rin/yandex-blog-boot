@@ -16,14 +16,11 @@ public interface CommentMapper {
     @Mapping(target = "updatedAt", ignore = true)
     Comment toEntity(CommentCreateDTO dto);
 
-    @Mappings({
-            @Mapping(source = "content", target = "content"),
-            @Mapping(source = "userId", target = "userId"),
-            @Mapping(target = "postId", ignore = true),
-            @Mapping(target = "parentCommentId", ignore = true),
-            @Mapping(target = "createdAt", ignore = true),
-            @Mapping(target = "updatedAt", ignore = true)
-    })
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "postId", ignore = true)
+    @Mapping(target = "parentCommentId", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Comment toEntity(CommentUpdateDTO dto);
 
     @Mappings({
@@ -34,13 +31,9 @@ public interface CommentMapper {
             @Mapping(source = "comment.parentCommentId", target = "parentCommentId"),
             @Mapping(source = "comment.createdAt", target = "createdAt"),
             @Mapping(source = "comment.updatedAt", target = "updatedAt"),
-            @Mapping(target = "userName", expression = "java(getUserName(comment.getUserId()))")
+            @Mapping(target = "userName", ignore = true)
     })
     CommentDTO toCommentDTO(Comment comment);
-
-
-    default String getUserName(Long userId) {
-        return "User_" + userId;
-    }
 }
+
 

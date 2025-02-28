@@ -1,6 +1,5 @@
 package org.example.junit.service;
 
-import org.example.junit.config.UserServiceTestConfig;
 import org.example.dto.CreateUserDTO;
 import org.example.dto.UpdateUserDTO;
 import org.example.dto.UserDTO;
@@ -9,15 +8,13 @@ import org.example.model.User;
 import org.example.repository.UserRepository;
 import org.example.mapper.UserMapper;
 import org.example.service.UserService;
+import org.example.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -27,26 +24,21 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = UserServiceTestConfig.class)
+@SpringBootTest(classes = UserServiceImpl.class)
 @ActiveProfiles("test")
 public class UserServiceImplTest {
 
     @Autowired
     private UserService userService;
 
-    @Autowired
+    @MockBean
     private UserRepository userRepository;
 
-    @Autowired
+    @MockBean
     private UserMapper userMapper;
-
-    @Autowired
-    private ApplicationContext context;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         reset(userRepository);
     }
 
@@ -83,14 +75,9 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void testContext() {
-        System.out.println("### ApplicationContext: " + context.getClass().getName());
-    }
-
-    @Test
     void testGetUserById_Success() {
         Long userId = 1L;
-        User user = createUser(userId, "testUser", "test@example.com", "password");
+        User user = createUser(userId, "testUser", "test@example.com", "password123");
         UserDTO expectedUserDTO = createUserDTO(userId, "testUser", "test@example.com");
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -107,23 +94,23 @@ public class UserServiceImplTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> userService.getUserById(userId));
-        assertEquals("User not found with id: 1", exception.getMessage(), "Сообщение исключения не совпадает для userId: " + userId);
+        assertEquals("User not found with id: 1", exception.getMessage());
         verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
     void testGetAllUsers() {
-        User user = createUser(1L, "testUser", "test@example.com", "password");
+        User user = createUser(1L, "testUser", "test@example.com", "password123");
         UserDTO userDTO = createUserDTO(1L, "testUser", "test@example.com");
 
-        when(userRepository.findAll(10, 0)).thenReturn(List.of(user));
+        when(userRepository.findAllUsers(10, 0)).thenReturn(List.of(user));
         when(userMapper.toUserDTO(user)).thenReturn(userDTO);
 
         List<UserDTO> result = userService.getAllUsers(10, 0);
         assertNotNull(result, "Результат не должен быть null");
         assertEquals(1, result.size(), "Количество пользователей не совпадает");
         assertUserDTOEquals(userDTO, result.get(0));
-        verify(userRepository, times(1)).findAll(10, 0);
+        verify(userRepository, times(1)).findAllUsers(10, 0);
     }
 
     @Test
@@ -158,19 +145,19 @@ public class UserServiceImplTest {
         UserDTO updatedUserDTO = createUserDTO(1L, "updatedUser", "updateduser@example.com");
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
-        when(userRepository.update(existingUser)).thenReturn(updatedUser);
+        when(userRepository.save(existingUser)).thenReturn(updatedUser);
         when(userMapper.toUserDTO(updatedUser)).thenReturn(updatedUserDTO);
 
         UserDTO result = userService.updateUser(1L, updateUserDTO);
         assertUserDTOEquals(updatedUserDTO, result);
         verify(userRepository, times(1)).findById(1L);
-        verify(userRepository, times(1)).update(existingUser);
+        verify(userRepository, times(1)).save(existingUser);
     }
 
     @Test
     void testDeleteUser() {
-        doNothing().when(userRepository).delete(1L);
+        doNothing().when(userRepository).deleteById(1L);
         userService.deleteUser(1L);
-        verify(userRepository, times(1)).delete(1L);
+        verify(userRepository, times(1)).deleteById(1L);
     }
 }

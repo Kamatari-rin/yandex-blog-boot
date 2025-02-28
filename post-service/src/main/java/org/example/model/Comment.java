@@ -3,6 +3,8 @@ package org.example.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
 
@@ -12,8 +14,9 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Table("comments")
 public class Comment {
-
+    @Id
     private Long id;
 
     @NotNull(message = "Content cannot be null")
