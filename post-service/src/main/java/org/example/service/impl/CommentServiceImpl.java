@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,10 +49,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDTO updateComment(CommentUpdateDTO commentUpdateDTO) {
-        Comment comment = commentMapper.toEntity(commentUpdateDTO);
-        commentRepository.findById(comment.getId())
+        Comment existingComment = commentRepository.findById(commentUpdateDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Комментарий не найден с id: " + commentUpdateDTO.getId()));
-        Comment updatedComment = commentRepository.save(comment);
+
+        existingComment.setContent(commentUpdateDTO.getContent());
+        existingComment.setUpdatedAt(Instant.now());
+
+        Comment updatedComment = commentRepository.save(existingComment);
+
         return commentMapper.toCommentDTO(updatedComment);
     }
 

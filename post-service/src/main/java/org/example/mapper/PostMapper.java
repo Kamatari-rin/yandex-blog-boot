@@ -12,13 +12,11 @@ import org.mapstruct.Mappings;
 public interface PostMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Post toEntity(PostCreateDTO dto);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tags", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Post toEntity(PostUpdateDTO dto);
@@ -34,7 +32,8 @@ public interface PostMapper {
             @Mapping(target = "authorName", ignore = true),
             @Mapping(target = "commentsCount", ignore = true),
             @Mapping(target = "likesCount", ignore = true),
-            @Mapping(target = "tags", source = "post.tags")
+            @Mapping(source = "post.tags", target = "tags")
     })
     PostDTO toPostDTO(Post post);
 }
+

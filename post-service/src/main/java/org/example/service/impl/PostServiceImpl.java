@@ -37,16 +37,7 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
 
         post.setTags(tagService.getTagsForPost(post.getId()));
-        String authorName = userServiceClient.fetchUserById(post.getUserId()).getUsername();
-        int likesCount = userServiceClient.fetchLikesCountByTarget(post.getId(), LikeTargetType.POST);
-        int commentsCount = postRepository.countCommentsByPostId(post.getId());
-
-        PostDTO dto = postMapper.toPostDTO(post);
-        dto.setAuthorName(authorName);
-        dto.setLikesCount(likesCount);
-        dto.setCommentsCount(commentsCount);
-        dto.setTags(post.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
-        return dto;
+        return enrichAndMap(post);
     }
 
     @Override
@@ -54,19 +45,12 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepository.findAllPosts(limit, offset);
         Set<Long> postIds = posts.stream().map(Post::getId).collect(Collectors.toSet());
         Map<Long, Set<Tag>> tagsByPost = tagService.getTagsForPosts(postIds);
-
-        return posts.stream().map(post -> {
-            post.setTags(tagsByPost.getOrDefault(post.getId(), Collections.emptySet()));
-            String authorName = userServiceClient.fetchUserById(post.getUserId()).getUsername();
-            int likesCount = userServiceClient.fetchLikesCountByTarget(post.getId(), LikeTargetType.POST);
-            int commentsCount = postRepository.countCommentsByPostId(post.getId());
-            PostDTO dto = postMapper.toPostDTO(post);
-            dto.setAuthorName(authorName);
-            dto.setLikesCount(likesCount);
-            dto.setCommentsCount(commentsCount);
-            dto.setTags(post.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
-            return dto;
-        }).collect(Collectors.toList());
+        posts.forEach(post ->
+                post.setTags(tagsByPost.getOrDefault(post.getId(), Collections.emptySet()))
+        );
+        return posts.stream()
+                .map(this::enrichAndMap)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -76,24 +60,10 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepository.save(post);
 
         if (postCreateDTO.getTags() != null && !postCreateDTO.getTags().isEmpty()) {
-            Set<Tag> tags = postCreateDTO.getTags().stream()
-                    .map(tagService::findOrCreateTag)
-                    .collect(Collectors.toSet());
-            tagService.saveTagsForPost(savedPost.getId(), tags);
-            savedPost.setTags(tags);
+            Set<Tag> processedTags = processTags(postCreateDTO.getTags(), savedPost.getId());
+            savedPost.setTags(processedTags);
         }
-
-        String authorName = userServiceClient.fetchUserById(savedPost.getUserId()).getUsername();
-        int likesCount = userServiceClient.fetchLikesCountByTarget(savedPost.getId(), LikeTargetType.POST);
-        int commentsCount = postRepository.countCommentsByPostId(savedPost.getId());
-
-        PostDTO dto = postMapper.toPostDTO(savedPost);
-        dto.setAuthorName(authorName);
-        dto.setLikesCount(likesCount);
-        dto.setCommentsCount(commentsCount);
-        dto.setTags(savedPost.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
-
-        return dto;
+        return enrichAndMap(savedPost);
     }
 
     @Override
@@ -110,29 +80,13 @@ public class PostServiceImpl implements PostService {
         postRepository.save(existingPost);
 
         if (postUpdateDTO.getTags() != null) {
-            Set<Tag> persistedTags = postUpdateDTO.getTags().stream()
-                    .map(tag -> tag.getId() == null ? tagService.findOrCreateTag(tag.getName()) : tag)
-                    .collect(Collectors.toSet());
-            tagService.deleteTagsForPost(existingPost.getId());
-            tagService.saveTagsForPost(existingPost.getId(), persistedTags);
-            existingPost.setTags(persistedTags);
+            Set<Tag> processedTags = processTags(postUpdateDTO.getTags(), existingPost.getId());
+            existingPost.setTags(processedTags);
         } else {
             existingPost.setTags(tagService.getTagsForPost(existingPost.getId()));
         }
-
-        String authorName = userServiceClient.fetchUserById(existingPost.getUserId()).getUsername();
-        int likesCount = userServiceClient.fetchLikesCountByTarget(existingPost.getId(), LikeTargetType.POST);
-        int commentsCount = postRepository.countCommentsByPostId(existingPost.getId());
-
-        PostDTO dto = postMapper.toPostDTO(existingPost);
-        dto.setAuthorName(authorName);
-        dto.setLikesCount(likesCount);
-        dto.setCommentsCount(commentsCount);
-        dto.setTags(existingPost.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
-
-        return dto;
+        return enrichAndMap(existingPost);
     }
-
 
     @Override
     @Transactional
@@ -148,15 +102,28 @@ public class PostServiceImpl implements PostService {
 
         return posts.stream().map(post -> {
             post.setTags(tagsByPost.getOrDefault(post.getId(), Collections.emptySet()));
-            String authorName = userServiceClient.fetchUserById(post.getUserId()).getUsername();
-            int likesCount = userServiceClient.fetchLikesCountByTarget(post.getId(), LikeTargetType.POST);
-            int commentsCount = postRepository.countCommentsByPostId(post.getId());
-            PostDTO dto = postMapper.toPostDTO(post);
-            dto.setAuthorName(authorName);
-            dto.setLikesCount(likesCount);
-            dto.setCommentsCount(commentsCount);
-            dto.setTags(post.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
-            return dto;
+            return enrichAndMap(post);
         }).collect(Collectors.toList());
+    }
+
+    private PostDTO enrichAndMap(Post post) {
+        String authorName = userServiceClient.fetchUserById(post.getUserId()).getUsername();
+        int likesCount = userServiceClient.fetchLikesCountByTarget(post.getId(), LikeTargetType.POST);
+        int commentsCount = postRepository.countCommentsByPostId(post.getId());
+        PostDTO dto = postMapper.toPostDTO(post);
+        dto.setAuthorName(authorName);
+        dto.setLikesCount(likesCount);
+        dto.setCommentsCount(commentsCount);
+        dto.setTags(post.getTags().stream().map(Tag::getName).collect(Collectors.toSet()));
+        return dto;
+    }
+
+    private Set<Tag> processTags(Set<String> tagNames, Long postId) {
+        Set<Tag> persistedTags = tagNames.stream()
+                .map(tagService::findOrCreateTag)
+                .collect(Collectors.toSet());
+        tagService.deleteTagsForPost(postId);
+        tagService.saveTagsForPost(postId, persistedTags);
+        return persistedTags;
     }
 }

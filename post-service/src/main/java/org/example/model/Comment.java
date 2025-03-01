@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
@@ -15,7 +17,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @ToString
 @Table("comments")
-public class Comment {
+public class Comment implements Persistable<Long> {
     @Id
     private Long id;
 
@@ -28,6 +30,17 @@ public class Comment {
 
     private Long parentCommentId;
 
+    @ReadOnlyProperty
     private Instant createdAt;
     private Instant updatedAt;
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.id == null;
+    }
 }

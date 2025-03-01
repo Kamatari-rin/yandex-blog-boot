@@ -46,7 +46,7 @@ function PostEdit({ post, onSave, onCancel }) {
                 }
             />
             <span className="post-page-date">
-        📅 {new Date(editedPost.createdAt * 1000).toLocaleDateString()}
+        📅 {new Date(editedPost.createdAt).toLocaleDateString()}
       </span>
             <textarea
                 ref={contentRef}
