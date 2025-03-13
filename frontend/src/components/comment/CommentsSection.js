@@ -112,7 +112,7 @@ function CommentsSection({ postId }) {
                                             day: "2-digit",
                                             month: "long",
                                             year: "numeric",
-                                        }).format(new Date(comment.createdAt * 1000))
+                                        }).format(new Date(comment.createdAt))
                                         : "Дата неизвестна"}
                                 </small>
                                 <button onClick={() => handleEditComment(comment.id, comment.content)} className="comment-edit">Редактировать</button>

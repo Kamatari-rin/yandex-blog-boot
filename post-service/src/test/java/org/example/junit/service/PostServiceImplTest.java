@@ -1,187 +1,281 @@
 package org.example.junit.service;
 
-import org.example.junit.config.PostServiceTestConfig;
 import org.example.dto.PostCreateDTO;
 import org.example.dto.PostDTO;
 import org.example.dto.PostUpdateDTO;
 import org.example.dto.UserDTO;
 import org.example.enums.LikeTargetType;
 import org.example.model.Post;
+import org.example.model.Tag;
 import org.example.repository.PostRepository;
 import org.example.mapper.PostMapper;
-import org.example.service.PostService;
+import org.example.service.TagService;
 import org.example.service.UserServiceClient;
+import org.example.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = PostServiceTestConfig.class)
+@ExtendWith(MockitoExtension.class)
 public class PostServiceImplTest {
 
-    @Autowired
-    private PostService postService;
-
-    @Autowired
+    @Mock
     private PostRepository postRepository;
 
-    @Autowired
+    @Mock
+    private TagService tagService;
+
+    @Mock
+    private PostMapper postMapper;
+
+    @Mock
     private UserServiceClient userServiceClient;
 
-    @Autowired
-    private PostMapper postMapper;
+    @InjectMocks
+    private PostServiceImpl postService;
+
+    private Post samplePost;
+    private PostDTO samplePostDTO;
 
     @BeforeEach
     void setUp() {
-        reset(postRepository);
-    }
-
-    private PostDTO createPostDTO(Long id, String title, String content) {
-        return PostDTO.builder()
-                .id(id)
-                .title(title)
-                .content(content)
+        samplePost = Post.builder()
+                .id(1L)
+                .title("Sample Title")
+                .content("Sample Content")
+                .userId(1L)
+                .createdAt(Instant.now().minusSeconds(3600))
+                .updatedAt(Instant.now().minusSeconds(3600))
+                .build();
+        samplePostDTO = PostDTO.builder()
+                .id(1L)
+                .title("Sample Title")
+                .content("Sample Content")
                 .userId(1L)
                 .build();
     }
 
-    private PostCreateDTO createPostCreateDTO(Long userId, String title, String content) {
-        return PostCreateDTO.builder()
-                .userId(userId)
-                .title(title)
-                .content(content)
-                .imageUrl("imageUrl")
-                .tags(null)
-                .build();
-    }
+    @Test
+    void testGetPostById() {
+        when(postRepository.findPostById(1L)).thenReturn(Optional.of(samplePost));
+        Set<Tag> tags = new HashSet<>(Arrays.asList(
+                Tag.builder().id(1L).name("tag1").build(),
+                Tag.builder().id(2L).name("tag2").build()
+        ));
+        when(tagService.getTagsForPost(1L)).thenReturn(tags);
+        when(postMapper.toPostDTO(samplePost)).thenReturn(samplePostDTO);
+        when(userServiceClient.fetchUserById(1L))
+                .thenReturn(new UserDTO(1L, "Author", "author@example.com", Instant.now(), Instant.now(), new HashSet<>(), new HashSet<>()));
 
-    private void assertPostDTOEquals(PostDTO expected, PostDTO actual) {
-        assertNotNull(actual, "Пост не должен быть null");
-        assertEquals(expected.getId(), actual.getId(), "ID поста не совпадает");
-        assertEquals(expected.getTitle(), actual.getTitle(), "Название поста не совпадает");
-        assertEquals(expected.getContent(), actual.getContent(), "Содержание поста не совпадает");
+        PostDTO result = postService.getPostById(1L);
+        assertNotNull(result);
+        assertEquals(samplePostDTO.getId(), result.getId());
+        assertEquals("Sample Title", result.getTitle());
     }
 
     @Test
-    void testGetPostById() {
-        Long postId = 1L;
-        PostDTO expectedPost = createPostDTO(postId, "Test Title", "Test Content");
+    void testGetAllPosts() {
+        List<Post> posts = List.of(samplePost);
+        when(postRepository.findAllPosts(anyInt(), anyInt())).thenReturn(posts);
+        Set<Long> postIds = posts.stream().map(Post::getId).collect(Collectors.toSet());
+        Map<Long, Set<Tag>> tagsByPost = new HashMap<>();
+        tagsByPost.put(1L, new HashSet<>(Collections.singletonList(Tag.builder().id(1L).name("tag1").build())));
+        when(tagService.getTagsForPosts(postIds)).thenReturn(tagsByPost);
+        when(postMapper.toPostDTO(samplePost)).thenReturn(samplePostDTO);
+        when(userServiceClient.fetchUserById(anyLong()))
+                .thenReturn(new org.example.dto.UserDTO(1L, "Author", "author@example.com", Instant.now(), Instant.now(), new HashSet<>(), new HashSet<>()));
+        when(userServiceClient.fetchLikesCountByTarget(anyLong(), eq(LikeTargetType.POST))).thenReturn(5);
+        when(postRepository.countCommentsByPostId(anyLong())).thenReturn(10);
 
-        when(postRepository.findPostWithTagsById(postId)).thenReturn(Optional.of(new Post()));
-        when(postMapper.toPostDTO(any(Post.class), eq(userServiceClient), eq(postRepository))).thenReturn(expectedPost);
-
-        PostDTO result = postService.getPostById(postId);
-
-        assertPostDTOEquals(expectedPost, result);
+        List<PostDTO> result = postService.getAllPosts(100, 0);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(samplePostDTO.getId(), result.get(0).getId());
     }
 
     @Test
     void testCreatePost() {
-        PostCreateDTO postCreateDTO = createPostCreateDTO(1L, "New Post", "Post content");
-        PostDTO expectedPostDTO = createPostDTO(2L, "New Post", "Post content");
+        Set<String> tagNames = new HashSet<>(Arrays.asList("tag1", "tag2"));
+        PostCreateDTO createDTO = PostCreateDTO.builder()
+                .userId(1L)
+                .title("New Post")
+                .content("Post content")
+                .imageUrl("imageUrl")
+                .tags(tagNames)
+                .build();
 
-        Post postToSave = new Post();
-        when(postMapper.toEntity(postCreateDTO)).thenReturn(postToSave);
-        when(postRepository.save(postToSave)).thenReturn(postToSave);
-        when(postMapper.toPostDTO(postToSave, userServiceClient, postRepository)).thenReturn(expectedPostDTO);
+        Post postToSave = Post.builder()
+                .title("New Post")
+                .content("Post content")
+                .userId(1L)
+                .build();
 
-        PostDTO result = postService.createPost(postCreateDTO);
+        Post savedPost = Post.builder()
+                .id(2L)
+                .title("New Post")
+                .content("Post content")
+                .userId(1L)
+                .createdAt(Instant.now().minusSeconds(3600))
+                .updatedAt(Instant.now())
+                .build();
 
-        assertPostDTOEquals(expectedPostDTO, result);
+        PostDTO expectedDTO = PostDTO.builder()
+                .id(2L)
+                .title("New Post")
+                .content("Post content")
+                .userId(1L)
+                .build();
+        expectedDTO.setAuthorName("Author");
+        expectedDTO.setLikesCount(5);
+        expectedDTO.setCommentsCount(10);
+        expectedDTO.setTags(tagNames);
+
+        when(postMapper.toEntity(createDTO)).thenReturn(postToSave);
+        when(postRepository.save(postToSave)).thenReturn(savedPost);
+        Set<Tag> persistedTags = tagNames.stream()
+                .map(tagName -> Tag.builder().id(new Random().nextLong()).name(tagName).build())
+                .collect(Collectors.toSet());
+        when(tagService.findOrCreateTag(anyString())).thenAnswer(invocation -> {
+            String tName = invocation.getArgument(0);
+            return persistedTags.stream().filter(t -> t.getName().equals(tName)).findFirst().orElse(null);
+        });
+        doNothing().when(tagService).deleteTagsForPost(savedPost.getId());
+        doNothing().when(tagService).saveTagsForPost(savedPost.getId(), persistedTags);
+
+        when(postMapper.toPostDTO(savedPost)).thenReturn(expectedDTO);
+        when(userServiceClient.fetchUserById(1L))
+                .thenReturn(new org.example.dto.UserDTO(1L, "Author", "author@example.com", Instant.now(), Instant.now(), new HashSet<>(), new HashSet<>()));
+        when(userServiceClient.fetchLikesCountByTarget(2L, LikeTargetType.POST)).thenReturn(5);
+        when(postRepository.countCommentsByPostId(2L)).thenReturn(10);
+
+        PostDTO result = postService.createPost(createDTO);
+        assertNotNull(result);
+        assertEquals(expectedDTO.getId(), result.getId());
+        assertEquals(expectedDTO.getTitle(), result.getTitle());
+        assertEquals(expectedDTO.getContent(), result.getContent());
+        assertEquals(expectedDTO.getTags(), result.getTags());
     }
 
     @Test
     void testUpdatePost() {
-        PostUpdateDTO updatePostDTO = new PostUpdateDTO(1L, 1L, "Updated Title", "Updated Content", "imageUrl", null);
-        PostDTO expectedUpdatedPostDTO = createPostDTO(1L, "Updated Title", "Updated Content");
+        Set<String> tagNames = new HashSet<>(Arrays.asList("tag1", "tag3"));
+        PostUpdateDTO updateDTO = PostUpdateDTO.builder()
+                .postId(1L)
+                .userId(1L)
+                .title("Updated Title")
+                .content("Updated Content")
+                .imageUrl("image.png")
+                .tags(tagNames)
+                .build();
 
-        Post existingPost = new Post();
-        when(postRepository.findById(1L)).thenReturn(Optional.of(existingPost));
-        when(postMapper.toEntity(updatePostDTO)).thenReturn(new Post());
-        when(postRepository.update(any(Post.class))).thenReturn(new Post());
-        when(postMapper.toPostDTO(any(Post.class), eq(userServiceClient), eq(postRepository))).thenReturn(expectedUpdatedPostDTO);
+        Post existingPost = Post.builder()
+                .id(1L)
+                .title("Old Title")
+                .content("Old Content")
+                .userId(1L)
+                .createdAt(Instant.now().minusSeconds(3600))
+                .updatedAt(Instant.now().minusSeconds(3600))
+                .build();
 
-        PostDTO result = postService.updatePost(updatePostDTO);
+        PostDTO expectedUpdatedDTO = PostDTO.builder()
+                .id(1L)
+                .title("Updated Title")
+                .content("Updated Content")
+                .userId(1L)
+                .build();
+        expectedUpdatedDTO.setAuthorName("Author");
+        expectedUpdatedDTO.setLikesCount(5);
+        expectedUpdatedDTO.setCommentsCount(10);
+        expectedUpdatedDTO.setTags(tagNames);
 
-        assertPostDTOEquals(expectedUpdatedPostDTO, result);
+        when(postRepository.findPostById(1L)).thenReturn(Optional.of(existingPost));
+        when(postRepository.save(existingPost)).thenReturn(existingPost);
+
+        Set<Tag> persistedTags = tagNames.stream()
+                .map(tagName -> Tag.builder().id(new Random().nextLong()).name(tagName).build())
+                .collect(Collectors.toSet());
+        when(tagService.findOrCreateTag(anyString())).thenAnswer(invocation -> {
+            String tName = invocation.getArgument(0);
+            return persistedTags.stream().filter(t -> t.getName().equals(tName)).findFirst().orElse(null);
+        });
+        doNothing().when(tagService).deleteTagsForPost(1L);
+        doNothing().when(tagService).saveTagsForPost(1L, persistedTags);
+
+        when(postMapper.toPostDTO(existingPost)).thenReturn(expectedUpdatedDTO);
+        when(userServiceClient.fetchUserById(1L))
+                .thenReturn(new org.example.dto.UserDTO(1L, "Author", "author@example.com", Instant.now(), Instant.now(), new HashSet<>(), new HashSet<>()));
+        when(userServiceClient.fetchLikesCountByTarget(1L, LikeTargetType.POST)).thenReturn(5);
+        when(postRepository.countCommentsByPostId(1L)).thenReturn(10);
+
+        PostDTO result = postService.updatePost(updateDTO);
+        assertNotNull(result);
+        assertEquals(expectedUpdatedDTO.getTitle(), result.getTitle());
+        assertEquals(expectedUpdatedDTO.getContent(), result.getContent());
+        assertEquals(expectedUpdatedDTO.getTags(), result.getTags());
     }
 
     @Test
     void testDeletePost() {
         Long postId = 1L;
-
-        doNothing().when(postRepository).delete(postId);
-
+        doNothing().when(postRepository).deletePostById(postId);
         postService.deletePost(postId);
-
-        verify(postRepository, times(1)).delete(postId);
+        verify(postRepository, times(1)).deletePostById(postId);
     }
 
     @Test
     void testGetPostsByTag() {
         String tag = "tag1";
 
-        List<PostDTO> expectedPosts = List.of(
-                createPostDTO(1L, "Post 1", "Content"),
-                createPostDTO(2L, "Post 2", "Content")
-        );
-
         Post post1 = Post.builder()
                 .id(1L)
                 .title("Post 1")
-                .content("Content")
+                .content("Content 1")
                 .userId(1L)
-                .createdAt(Instant.now())
+                .createdAt(Instant.now().minusSeconds(3600))
                 .updatedAt(Instant.now())
                 .build();
-
         Post post2 = Post.builder()
                 .id(2L)
                 .title("Post 2")
-                .content("Content")
+                .content("Content 2")
                 .userId(2L)
-                .createdAt(Instant.now())
+                .createdAt(Instant.now().minusSeconds(1800))
                 .updatedAt(Instant.now())
                 .build();
 
-        when(postRepository.findPostsByTag(tag)).thenReturn(List.of(post1, post2));
+        List<Post> postsByTag = List.of(post1, post2);
+        when(postRepository.findPostsByTag(tag)).thenReturn(postsByTag);
 
-        doReturn(5).when(userServiceClient).fetchLikesCountByTarget(any(), eq(LikeTargetType.POST));
-        doReturn(10).when(postRepository).countCommentsByPostId(any());
-        doReturn(new UserDTO(1L, "Author", "author@example.com", Instant.now(), Instant.now(), new HashSet<>(), new HashSet<>()))
-                .when(userServiceClient).fetchUserById(any());
+        Map<Long, Set<Tag>> tagsByPost = new HashMap<>();
+        tagsByPost.put(1L, new HashSet<>(Collections.singletonList(Tag.builder().id(1L).name("tag1").build())));
+        tagsByPost.put(2L, new HashSet<>(Collections.singletonList(Tag.builder().id(2L).name("tag2").build())));
+        when(tagService.getTagsForPosts(anySet())).thenReturn(tagsByPost);
 
-        when(postMapper.toPostDTO(any(Post.class), eq(userServiceClient), eq(postRepository)))
-                .thenAnswer(invocation -> {
-                    Post post = invocation.getArgument(0);
-                    Long id = post.getId();
-                    return PostDTO.builder()
-                            .id(id)
-                            .title("Post " + id)
-                            .content("Content")
-                            .userId(post.getUserId())
-                            .build();
-                });
+        when(userServiceClient.fetchUserById(anyLong()))
+                .thenReturn(new org.example.dto.UserDTO(1L, "Author", "author@example.com", Instant.now(), Instant.now(), new HashSet<>(), new HashSet<>()));
+        when(userServiceClient.fetchLikesCountByTarget(anyLong(), eq(LikeTargetType.POST))).thenReturn(5);
+        when(postRepository.countCommentsByPostId(anyLong())).thenReturn(10);
+        when(postMapper.toPostDTO(any(Post.class))).thenAnswer(invocation -> {
+            Post p = invocation.getArgument(0);
+            return PostDTO.builder()
+                    .id(p.getId())
+                    .title(p.getTitle())
+                    .content(p.getContent())
+                    .userId(p.getUserId())
+                    .build();
+        });
 
         List<PostDTO> result = postService.getPostsByTag(tag);
-
-        assertEquals(expectedPosts.size(), result.size(), "Размер списков постов не совпадает");
-
-        for (int i = 0; i < expectedPosts.size(); i++) {
-            assertPostDTOEquals(expectedPosts.get(i), result.get(i));
-        }
+        assertEquals(2, result.size(), "Количество постов не совпадает");
     }
 }

@@ -5,8 +5,10 @@ import org.example.enums.LikeTargetType;
 import org.example.service.UserServiceClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+@Service
 public class UserServiceClientImpl implements UserServiceClient {
 
     private final RestTemplate restTemplate;

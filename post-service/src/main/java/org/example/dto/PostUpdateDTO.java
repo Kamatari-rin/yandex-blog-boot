@@ -26,5 +26,5 @@ public class PostUpdateDTO {
     private String content;
 
     private String imageUrl;
-    private Set<Tag> tags;
+    private Set<String> tags;
 }

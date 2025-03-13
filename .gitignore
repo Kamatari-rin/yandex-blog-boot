@@ -37,3 +37,8 @@ node_modules/
 
 ### Mac OS ###
 .DS_Store
+
+# Игнорировать все файлы в .gradle
+.gradle/*
+!.gradle/wrapper.jar
+!.gradle/wrapper.properties

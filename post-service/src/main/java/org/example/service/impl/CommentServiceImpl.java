@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.CommentCreateDTO;
 import org.example.dto.CommentDTO;
 import org.example.dto.CommentUpdateDTO;
@@ -11,19 +12,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
-
-    public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper) {
-        this.commentRepository = commentRepository;
-        this.commentMapper = commentMapper;
-    }
 
     @Override
     public CommentDTO getCommentById(Long commentId) {
@@ -34,7 +32,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getCommentsByPostId(Long postId, int limit, int offset) {
-        return commentRepository.findByPostId(postId, limit, offset).stream()
+        return commentRepository.findByPostId(postId, limit, offset)
+                .stream()
                 .map(commentMapper::toCommentDTO)
                 .collect(Collectors.toList());
     }
@@ -50,18 +49,21 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDTO updateComment(CommentUpdateDTO commentUpdateDTO) {
-        Comment comment = commentRepository.findById(commentUpdateDTO.getId())
+        Comment existingComment = commentRepository.findById(commentUpdateDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Комментарий не найден с id: " + commentUpdateDTO.getId()));
 
-        comment.setContent(commentUpdateDTO.getContent());
+        existingComment.setContent(commentUpdateDTO.getContent());
+        existingComment.setUpdatedAt(Instant.now());
 
-        Comment updatedComment = commentRepository.update(comment);
+        Comment updatedComment = commentRepository.save(existingComment);
+
         return commentMapper.toCommentDTO(updatedComment);
     }
 
     @Override
     @Transactional
     public void deleteComment(Long commentId) {
-        commentRepository.delete(commentId);
+        commentRepository.deleteById(commentId);
     }
 }
+

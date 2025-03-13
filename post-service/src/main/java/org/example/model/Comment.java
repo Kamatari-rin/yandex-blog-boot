@@ -3,6 +3,10 @@ package org.example.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
 
@@ -12,8 +16,9 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Comment {
-
+@Table("comments")
+public class Comment implements Persistable<Long> {
+    @Id
     private Long id;
 
     @NotNull(message = "Content cannot be null")
@@ -25,6 +30,17 @@ public class Comment {
 
     private Long parentCommentId;
 
+    @ReadOnlyProperty
     private Instant createdAt;
     private Instant updatedAt;
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.id == null;
+    }
 }

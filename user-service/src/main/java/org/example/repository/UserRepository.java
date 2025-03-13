@@ -1,10 +1,15 @@
 package org.example.repository;
 
 import org.example.model.User;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends AbstractRepository<User> {
+import java.util.List;
 
-    User save(User user);
+@Repository
+public interface UserRepository extends CrudRepository<User, Long> {
 
-    User update(User user);
+    @Query("SELECT * FROM users ORDER BY id ASC LIMIT :limit OFFSET :offset")
+    List<User> findAllUsers(int limit, int offset);
 }

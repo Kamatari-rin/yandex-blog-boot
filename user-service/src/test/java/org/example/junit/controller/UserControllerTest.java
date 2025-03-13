@@ -2,57 +2,53 @@ package org.example.junit.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.example.junit.config.UserControllerTestConfig;
 import org.example.controller.UserController;
 import org.example.dto.CreateUserDTO;
 import org.example.dto.UpdateUserDTO;
 import org.example.dto.UserDTO;
 import org.example.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = UserControllerTestConfig.class)
+@WebMvcTest(UserController.class)
 @ActiveProfiles("test")
-public class UserControllerTest {
+class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private UserController userController;
 
-    @Autowired
+    @MockBean
     private UserService userService;
-
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        this.objectMapper = new ObjectMapper();
-        this.objectMapper.registerModule(new JavaTimeModule());
-        this.mockMvc = MockMvcBuilders
-                .standaloneSetup(userController)
-                .build();
-    }
 
     private UserDTO createUserDTO(Long id, String username, String email) {
         return UserDTO.builder()
@@ -89,10 +85,10 @@ public class UserControllerTest {
 
         when(userService.createUser(any())).thenReturn(newUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/users")
-                        .contentType("application/json")
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUserDTO)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(status().isCreated())
                 .andExpect(result -> {
                     UserDTO actualUser = objectMapper.readValue(result.getResponse().getContentAsString(), UserDTO.class);
                     assertUserDTOEquals(newUser, actualUser);
@@ -105,8 +101,8 @@ public class UserControllerTest {
 
         when(userService.getUserById(1L)).thenReturn(expectedUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+        mockMvc.perform(get("/api/users/1"))
+                .andExpect(status().isOk())
                 .andExpect(result -> {
                     UserDTO actualUser = objectMapper.readValue(result.getResponse().getContentAsString(), UserDTO.class);
                     assertUserDTOEquals(expectedUser, actualUser);
@@ -115,7 +111,6 @@ public class UserControllerTest {
 
     @Test
     void testGetAllUsers() throws Exception {
-
         List<UserDTO> expectedUsers = List.of(
                 createUserDTO(1L, "user1", "user1@example.com"),
                 createUserDTO(2L, "user2", "user2@example.com")
@@ -123,15 +118,18 @@ public class UserControllerTest {
 
         when(userService.getAllUsers(10, 0)).thenReturn(expectedUsers);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users?limit=10&offset=0"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+        mockMvc.perform(get("/api/users")
+                        .param("limit", "10")
+                        .param("offset", "0"))
+                .andExpect(status().isOk())
                 .andExpect(result -> {
-                    List<UserDTO> actualUsers = objectMapper.readValue(result.getResponse().getContentAsString(),
-                            new TypeReference<List<UserDTO>>() {});
+                    List<UserDTO> actualUsers = objectMapper.readValue(
+                            result.getResponse().getContentAsString(),
+                            new TypeReference<List<UserDTO>>() {}
+                    );
                     assertEquals(expectedUsers.size(), actualUsers.size(), "Размер списков не совпадает");
-                    for (int i = 0; i < expectedUsers.size(); i++) {
-                        assertUserDTOEquals(expectedUsers.get(i), actualUsers.get(i));
-                    }
+                    IntStream.range(0, expectedUsers.size())
+                            .forEach(i -> assertUserDTOEquals(expectedUsers.get(i), actualUsers.get(i)));
                 });
     }
 
@@ -147,10 +145,10 @@ public class UserControllerTest {
 
         when(userService.updateUser(eq(1L), any(UpdateUserDTO.class))).thenReturn(updatedUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/users/1")
-                        .contentType("application/json")
+        mockMvc.perform(put("/api/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(result -> {
                     UserDTO actualUser = objectMapper.readValue(result.getResponse().getContentAsString(), UserDTO.class);
                     assertUserDTOEquals(updatedUser, actualUser);
@@ -163,8 +161,8 @@ public class UserControllerTest {
 
         doNothing().when(userService).deleteUser(eq(userId));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/{id}", userId))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        mockMvc.perform(delete("/api/users/{id}", userId))
+                .andExpect(status().isNoContent());
 
         verify(userService, times(1)).deleteUser(eq(userId));
     }

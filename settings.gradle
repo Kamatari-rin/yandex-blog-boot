@@ -1,0 +1,4 @@
+rootProject.name = 'yandex-blog-boot'
+
+include 'user-service'
+include 'post-service'

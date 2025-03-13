@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.CreateLikeDTO;
 import org.example.dto.LikeDTO;
 import org.example.dto.LikeStatusDTO;
@@ -16,17 +17,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService {
 
     private final LikeRepository likeRepository;
     private final LikeMapper likeMapper;
 
-    public LikeServiceImpl(LikeRepository likeRepository, LikeMapper likeMapper) {
-        this.likeRepository = likeRepository;
-        this.likeMapper = likeMapper;
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public int countLikesByIdAndTarget(Long targetId, LikeTargetType targetType) {
         return likeRepository.countLikesByIdAndTarget(targetId, targetType);
     }
@@ -37,25 +35,30 @@ public class LikeServiceImpl implements LikeService {
         Like like = likeMapper.toEntity(createLikeDTO);
 
         Optional<Like> existingLike = likeRepository.findByUserAndTarget(
-                createLikeDTO.getUserId(), createLikeDTO.getTargetId(), createLikeDTO.getTargetType());
+                createLikeDTO.getUserId(),
+                createLikeDTO.getTargetId(),
+                createLikeDTO.getTargetType()
+        );
 
         Like savedLike = existingLike
-                .map(l -> {
-                    l.setLiked(createLikeDTO.isLiked());
-                    return likeRepository.saveOrUpdate(l);
+                .map(existing -> {
+                    existing.setLiked(createLikeDTO.isLiked());
+                    return likeRepository.save(existing);
                 })
-                .orElseGet(() -> likeRepository.saveOrUpdate(like));
+                .orElseGet(() -> likeRepository.save(like));
 
         return likeMapper.toDTO(savedLike);
     }
 
+
     @Override
+    @Transactional(readOnly = true)
     public List<LikeStatusDTO> getLikesStatuses(List<Long> targetIds, Long userId, LikeTargetType targetType) {
         List<Like> likes = likeRepository.findByUserIdAndTargetIdsAndType(userId, targetIds, targetType);
-
         return likes.stream()
                 .map(like -> new LikeStatusDTO(like.getTargetId(), like.getTargetType(), like.isLiked()))
                 .collect(Collectors.toList());
     }
 }
+
 

@@ -17,8 +17,7 @@ public interface CommentMapper {
     Comment toEntity(CommentCreateDTO dto);
 
     @Mappings({
-            @Mapping(source = "content", target = "content"),
-            @Mapping(source = "userId", target = "userId"),
+            @Mapping(source = "id", target = "id"),
             @Mapping(target = "postId", ignore = true),
             @Mapping(target = "parentCommentId", ignore = true),
             @Mapping(target = "createdAt", ignore = true),
@@ -34,13 +33,7 @@ public interface CommentMapper {
             @Mapping(source = "comment.parentCommentId", target = "parentCommentId"),
             @Mapping(source = "comment.createdAt", target = "createdAt"),
             @Mapping(source = "comment.updatedAt", target = "updatedAt"),
-            @Mapping(target = "userName", expression = "java(getUserName(comment.getUserId()))")
+            @Mapping(target = "userName", ignore = true)
     })
     CommentDTO toCommentDTO(Comment comment);
-
-
-    default String getUserName(Long userId) {
-        return "User_" + userId;
-    }
 }
-

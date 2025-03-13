@@ -2,20 +2,18 @@ package org.example.junit.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.junit.config.PostControllerTestConfig;
 import org.example.controller.PostController;
 import org.example.dto.PostCreateDTO;
 import org.example.dto.PostDTO;
 import org.example.dto.PostUpdateDTO;
 import org.example.service.PostService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
@@ -23,27 +21,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = PostControllerTestConfig.class)
+@WebMvcTest(PostController.class)
+@ActiveProfiles("test")
 public class PostControllerTest {
 
     @Autowired
-    private PostController postController;
+    private MockMvc mockMvc;
 
-    @Autowired
+    @MockBean
     private PostService postService;
 
-    private MockMvc mockMvc;
+    @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        this.objectMapper = new ObjectMapper();
-        this.mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
-    }
 
     private PostDTO createPostDTO(Long id, String title, String content) {
         return PostDTO.builder()
@@ -64,13 +59,13 @@ public class PostControllerTest {
     @Test
     void testGetPostById() throws Exception {
         PostDTO expectedPost = createPostDTO(1L, "Test Title", "Test Content");
-
         when(postService.getPostById(1L)).thenReturn(expectedPost);
 
         mockMvc.perform(get("/api/posts/1"))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
-                    PostDTO actualPost = objectMapper.readValue(result.getResponse().getContentAsString(), PostDTO.class);
+                    PostDTO actualPost = objectMapper.readValue(
+                            result.getResponse().getContentAsString(), PostDTO.class);
                     assertPostDTOEquals(expectedPost, actualPost);
                 });
     }
@@ -83,11 +78,12 @@ public class PostControllerTest {
         when(postService.createPost(any(PostCreateDTO.class))).thenReturn(expectedPost);
 
         mockMvc.perform(post("/api/posts")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createPostDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(result -> {
-                    PostDTO actualPost = objectMapper.readValue(result.getResponse().getContentAsString(), PostDTO.class);
+                    PostDTO actualPost = objectMapper.readValue(
+                            result.getResponse().getContentAsString(), PostDTO.class);
                     assertPostDTOEquals(expectedPost, actualPost);
                 });
     }
@@ -100,11 +96,12 @@ public class PostControllerTest {
         when(postService.updatePost(any(PostUpdateDTO.class))).thenReturn(updatedPost);
 
         mockMvc.perform(put("/api/posts/1")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatePostDTO)))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
-                    PostDTO actualPost = objectMapper.readValue(result.getResponse().getContentAsString(), PostDTO.class);
+                    PostDTO actualPost = objectMapper.readValue(
+                            result.getResponse().getContentAsString(), PostDTO.class);
                     assertPostDTOEquals(updatedPost, actualPost);
                 });
     }
@@ -112,14 +109,12 @@ public class PostControllerTest {
     @Test
     void testDeletePost() throws Exception {
         Long postId = 1L;
-
         mockMvc.perform(delete("/api/posts/{id}", postId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void testGetAllPosts() throws Exception {
-        // Подготовка данных
         List<PostDTO> expectedPosts = List.of(
                 createPostDTO(1L, "Post 1", "Content 1"),
                 createPostDTO(2L, "Post 2", "Content 2")
@@ -132,7 +127,8 @@ public class PostControllerTest {
                         .param("offset", "0"))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
-                    List<PostDTO> actualPosts = objectMapper.readValue(result.getResponse().getContentAsString(),
+                    List<PostDTO> actualPosts = objectMapper.readValue(
+                            result.getResponse().getContentAsString(),
                             new TypeReference<List<PostDTO>>() {});
                     assertEquals(expectedPosts.size(), actualPosts.size(), "Количество постов не совпадает");
                     for (int i = 0; i < expectedPosts.size(); i++) {

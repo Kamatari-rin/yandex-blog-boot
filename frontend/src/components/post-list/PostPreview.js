@@ -53,7 +53,7 @@ const PostPreview = React.memo(({ post }) => {
                             day: "2-digit",
                             month: "long",
                             year: "numeric",
-                        }).format(new Date(post.createdAt * 1000))
+                        }).format(new Date(post.createdAt))
                         : "Дата неизвестна"}
                 </p>
 

@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.annotation.Transient;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -15,7 +18,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Table("users")
 public class User {
+
+    @Id
     private Long id;
 
     @NotNull(message = "Username cannot be null")
@@ -30,19 +36,14 @@ public class User {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
+    @Transient
     @Builder.Default
     private Set<Long> likedPosts = new HashSet<>();
 
+    @Transient
     @Builder.Default
     private Set<Long> dislikedPosts = new HashSet<>();
 
-    @Builder.Default
-    private Set<Long> posts = new HashSet<>();
-
-    @Builder.Default
-    private Set<Long> comments = new HashSet<>();
-
     private Instant createdAt;
-
     private Instant updatedAt;
 }
